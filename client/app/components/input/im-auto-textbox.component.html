@@ -1,0 +1,11 @@
+<div [formGroup]="form">
+  <div class="multi-input-container">
+    <div class="col-md-9"><input [formControlName]="input.key" [id]="input.key" [ngModel]="value" [type]="input.type" class="form-control"></div>
+    <div class="col-md-3">
+      <div class="checkbox-container">
+        <input (change)="isAutoChecked($event)" type="checkbox" checked>
+        <label>Tự động</label>
+      </div>
+    </div>
+  </div>
+</div>

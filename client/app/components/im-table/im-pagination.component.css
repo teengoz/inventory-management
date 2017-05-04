@@ -1,0 +1,28 @@
+.input-page-container {
+    float: left;
+    padding: 0px 8px;
+    background-color: #f7f7f7;
+    margin-top: 10px;
+}
+
+.input-page {
+    float: left;
+    width: 26px;
+    height: 22px;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.input-page-text {
+    float: left;
+    margin-right: 2px;
+}
+
+.total-page {
+    color: #BBB;
+    margin-left: 2px;
+}
+
+.pagination-info-text {
+    color: #BBB;
+}

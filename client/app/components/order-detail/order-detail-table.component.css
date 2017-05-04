@@ -1,0 +1,62 @@
+/*.table>thead>tr>th {
+    border: 1px solid #dddddd !important;
+    text-align: center;
+}*/
+
+.order-table-container {
+    width: 100%;
+    /*overflow-x: auto;*/
+}
+
+.empty-row {
+    /*width: 1270px !important;*/
+}
+
+.table {
+    width: 99.9%;
+    margin: 0 auto;
+}
+
+.item-code {
+    font-weight: 500;
+}
+
+table.order-table thead tr th.action {
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+}
+
+table.order-table tbody tr td.action {
+    text-align: center;
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+}
+
+.order-table .number-cell {
+    text-align: right;
+}
+
+@media only screen and (max-width: 480px) { 
+    table.order-table tbody tr td.action {
+        text-align: center;
+        width: 100%;
+        max-width: 100%;
+        position: absolute !important;
+        bottom: 0;
+    }
+    .order-table td .header-text {
+        width: 90px;
+    }
+    .order-table .value-text {
+        width: calc(100% - 120px);
+    }
+    .order-table tbody tr {
+        position: relative;
+        padding-bottom: 30px;
+    }
+    .order-table tr.zero-row {
+        padding-bottom: 0px !important;
+    }
+}

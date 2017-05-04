@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-xs-12">
+    <div class="panel">
+      <div class="panel-header">
+        <h3 class="panel-title">
+          Tài khoản nhân viên
+        </h3>
+      </div>
+      <div class="panel-content">
+        <div class="row row-control">
+          <div class="col-sm-6 pull-right text-right control-container">
+            <button class="btn btn-defaut panel-control-btn">Nhập từ file</button>
+            <button class="btn btn-primary panel-control-btn">Thêm</button>
+          </div>
+          <div class="col-sm-3 control-container">
+            <select name="selecter_basic" class="form-control form-control-sub sub-selector">
+          <option value="">Chọn thao tác</option>
+          <option value="2">Xóa</option>
+        </select>
+          </div>
+        </div>
+        <div class="row row-control">
+          <div class="col-sm-4 control-container">
+            <div class="form-search search-only">
+              <input type="text" class="form-control" placeholder="Tìm kiếm">
+            </div>
+          </div>
+          <div class="col-sm-6 pull-right text-right control-container">
+            <span class="sub-text">1-5 trong tổng số 31</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th class="col-md-1 text-center"><input type="checkbox" (change)=checkAll($event) [(ngModel)]="isCheckedAll"></th>
+                  <th class="col-md-2">Tên đăng nhập</th>
+                  <th class="col-md-2">Tên đầy đủ</th>
+                  <th class="col-md-2">Số điện thoại</th>
+                  <th class="col-md-1">Email</th>
+                  <th class="col-md-2">Nhóm quyền</th>
+                  <th class="col-md-2 text-center">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor='let user of users' (click)=onCheckRow(user)>
+                  <td class="col-md-1 text-center"><input type="checkbox" name="id" value="{{ user.id }}" [(ngModel)]="user.checked" (ngModelChange)=onCheck()></td>
+                  <td class="col-md-2">{{ user.username }}</td>
+                  <td class="col-md-2">{{ user.fullname }}</td>
+                  <td class="col-md-2">{{ user.phone }}</td>
+                  <td class="col-md-1">{{ user.email }}</td>
+                  <td class="col-md-2">{{ user.role }}</td>
+                  <td class="col-md-2 text-center">
+                    <span class="glyphicon glyphicon-pencil action-icon" aria-hidden="true" (click)=onActionClick($event)></span>
+                    <span class="glyphicon glyphicon-ok action-icon" aria-hidden="true" (click)=onActionClick($event)></span>
+                    <span class="glyphicon glyphicon-trash action-icon" aria-hidden="true" (click)=onActionClick($event)></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="">
+      <div class="pull-right text-right">
+        <ul class="pagination">
+          <li class="">
+            <a href="#">
+              <<</a>
+          </li>
+          <li class="active"><a href="#">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">4</a></li>
+          <li class=""><a href="#">>></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

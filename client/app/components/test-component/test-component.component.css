@@ -1,0 +1,23 @@
+th, td {
+    position: relative;
+}
+
+.cell-resize {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    /*background-color: black;*/
+}
+
+.cell-resize-left {
+    left: 0px;
+}
+
+.cell-resize-right {
+    right: 0;
+}
+
+.cell-resize:hover {
+    cursor: col-resize;
+}

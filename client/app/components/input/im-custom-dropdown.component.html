@@ -1,0 +1,18 @@
+<div class="dropdown-container">
+  <div class="dropdown-input row">
+    <!--value="{{ getLabel(value) }}"-->
+    <input [(ngModel)]="termInput" 
+    [disabled]="isDisabled" 
+    (focus)="onTermInputFocus()" 
+    (keyup)="typing($event)"
+    (keydown)="moveOnOptions($event)"
+    type="text" class="col-md-12 form-control" placeholder="Nhập tên hoặc mã hàng hóa để chọn thêm vào danh sách">
+    <input type="hidden" value="{{ value }}">
+    <span *ngIf="isDisabled" (click)="cancelSelection()" class="cancel-selection glyphicon glyphicon-remove action-icon" aria-hidden="true"></span>
+  </div>
+  <div #dropdownContainer class="options-container row" [ngClass]="{ 'hide-options': isHideOptions }">
+    <div *ngFor="let option of optionsArray" class="dropdown-option" [ngClass]="{ 'hovered-selection': (option.value == selected) }" (click)="clickOption(option.value)">
+      {{ option.label }}
+    </div>
+  </div>
+</div>

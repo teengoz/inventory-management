@@ -1,0 +1,82 @@
+<div *ngIf="!options || !options['disablePagination']" class="row">
+  <im-pagination [data]=paginationData (turnPage)="turnPage($event)"></im-pagination>
+</div>
+<div class="row">
+  <div class="table-responsive imc-table-container">
+    <table #table class="imc-table" [style.width.px]='getTableWidth()'>
+      <thead>
+        <tr>
+          <!--Table Header-->
+          <th class="text-center" [style.width.px]='50'>
+            <input type="checkbox" (change)=checkAll($event) [(ngModel)]="isCheckedAll">
+          </th>
+          <th
+            *ngFor='let col of columns; let i=index'
+            (click)="(col.sort) ? onSortClick($event) : ''"
+            [id]=col.propName
+            class="
+            {{ (col.sort) ? 'can-sort' : '' }}"
+            [style.width.px]='colWidth[i+1]'
+          >
+            {{ col.title }}
+            <div *ngIf="fixedCol.indexOf(i+1) < 0" (mousedown)="onResizeEdgeClick($event, i + 1, i + 2)" class="cell-resize cell-resize-right">
+            </div>
+          </th>
+          <th class="text-center" [style.width.px]='100'>
+            Thao tác
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--Filter Row-->
+        <tr *ngIf="hasFilterRow" class="filter-row">
+          <td class="text-center">
+            <span class="filter-title">Bộ lọc</span>
+            <span class="filter-toggle glyphicon" [ngClass]="{ 'glyphicon-chevron-down': collapse, 'glyphicon-chevron-up': !collapse }" (click)="onCollapse()"></span>
+          </td>
+          <td *ngFor='let col of columns; let i=index' [ngClass]="{'collapse': collapse}" [style.width.px]='colWidth[i+1]'>
+            <input *ngIf="col.filter" (keyup)=onFilter($event) [name]=col.propName type="text" class="col-md-12 form-control" placeholder="{{ col.title }}">
+            <div *ngIf="fixedCol.indexOf(i+1) < 0" (mousedown)="onResizeEdgeClick($event, i + 1, i + 2)" class="cell-resize cell-resize-right">
+            </div>
+          </td>
+          <td class="text-center"></td>
+        </tr>
+        <!--Data Rows-->
+        <tr *ngFor='let item of data' (click)=onCheckRow(item)>
+          <!--Checkbox Cell-->
+          <td class="text-center"><input type="checkbox" name="id" value="{{ item.id }}" [(ngModel)]="item.checked" (ngModelChange)=onCheck()></td>
+          <!--Data Cells-->
+          <td *ngFor='let col of columns; let i=index' [attr.data-header]="col.title" class="" [style.width.px]='colWidth[i+1]'>
+            <div class="header-text">
+              {{ col.title }}
+            </div>
+            <div class="value-text">
+              {{ getProp(item, col.propName, true) }}
+            </div>
+            <div *ngIf="fixedCol.indexOf(i+1) < 0" (mousedown)="onResizeEdgeClick($event, i + 1, i + 2)" class="cell-resize cell-resize-right">
+            </div>
+          </td>
+          <!--Action Cell-->
+          <td [attr.data-header]="'Thao tác'" class="text-center action-cell">
+            <div class="header-text">
+              Thao tác
+            </div>
+            <div class="value-text">
+              <span class="glyphicon glyphicon-pencil action-icon" aria-hidden="true" (click)="edit(item); $event.stopPropagation();"></span>
+              <span class="glyphicon glyphicon-duplicate action-icon" aria-hidden="true" (click)="clone(item); $event.stopPropagation()"></span>
+              <span class="glyphicon glyphicon-trash action-icon" aria-hidden="true" (click)="delete(item); $event.stopPropagation();"></span>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="!data || (!!data && data.length == 0)" class="zero-row">
+          <td [colSpan]="columns.length+2">
+            Không có kết quả
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div *ngIf="!options || !options['disablePagination']" class="row">
+  <im-pagination [data]=paginationData (turnPage)="turnPage($event)"></im-pagination>
+</div>

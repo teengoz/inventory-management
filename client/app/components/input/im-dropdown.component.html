@@ -1,0 +1,18 @@
+<div [formGroup]="form">
+    <!--<select 
+        [id]="input.key"
+        [formControlName]="input.key"
+        [ngModel]="value"
+        name="selecter_basic" class="form-control">
+        <option value="" selected>Chọn</option>
+        <option *ngFor="let opt of input.options" [value]="opt[input.keyField]">{{opt[input.valueField]}}</option>
+    </select>-->
+    <ng-select
+        *ngIf="loaded"
+        [id]="input.key"
+        [formControlName]="input.key"
+        [options]="optionsArray"
+        [allowClear]="true"
+    >
+    </ng-select>
+</div>

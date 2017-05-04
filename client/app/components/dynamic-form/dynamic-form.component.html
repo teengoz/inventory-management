@@ -1,0 +1,12 @@
+<div>
+  <form (ngSubmit)="onSubmit(empForm, $event)" [formGroup]="form" class="form-horizontal">
+    <div *ngFor="let input of inputs" class="row">
+      <df-input [input]="input" [values]="values" [form]="form"></df-input>
+    </div>
+    <div class="row">
+      <div class="text-right">
+        <button class="btn btn-primary" [disabled]="!form.valid">Lưu</button>
+      </div>
+    </div>
+  </form>
+</div>

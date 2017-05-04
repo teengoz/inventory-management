@@ -1,0 +1,13 @@
+<div class="panel" style="margin-bottom: 0px;">
+	<div class="panel-header">
+		<h3 class="panel-title">
+			{{ context.title }}
+		</h3>
+		<button (click)=closeClick()  aria-label="Close" class="btn-modal-close close" type="button">
+          <span aria-hidden="true">×</span>
+      	</button>
+	</div>
+	<div class="panel-content">
+		<dynamic-form (onFormSubmit)=onFormSubmit($event) [context]=context></dynamic-form>
+	</div>
+</div>

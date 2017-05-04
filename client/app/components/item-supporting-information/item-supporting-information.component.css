@@ -1,0 +1,38 @@
+.control-container {
+    padding: 0px;
+}
+
+.can-sort:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #2196f3;
+}
+
+.can-sort:after {
+    content: '';
+	float: right;
+	margin-top: 10px;
+	border-width: 0 6px 6px;
+	border-style: solid;
+	border-color: #2196f3 transparent;
+	visibility: hidden;
+	opacity: 0;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.can-sort:hover:after {
+    visibility: visible;
+	opacity: 1;
+}
+
+.descending-sort:after {
+    border-bottom: none;
+    border-width: 6px 6px 0;
+}
+
+form {
+    margin-bottom: 0px;
+}

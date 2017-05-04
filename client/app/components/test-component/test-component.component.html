@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-12">
+    <div class="panel">
+      <div class="table-responsive">
+        <table #table class="imc-table" [style.width.px]='getTableWidth()'>
+          <thead>
+            <tr>
+              <th *ngFor="let i of [0, 1, 2, 3, 4]" [style.width.px]='colWidth[i]'>
+                <!--<div (mousedown)="onResizeEdgeClick($event, i - 1, i)" class="cell-resize cell-resize-left">
+                </div>-->
+                <div class="cell-content">
+                  Header {{ i }}
+                </div>
+                <div *ngIf="fixedCol.indexOf(i) < 0" (mousedown)="onResizeEdgeClick($event, i, i + 1)" class="cell-resize cell-resize-right">
+
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td *ngFor="let i of [0, 1, 2, 3, 4]">
+                <div class="cell-content">
+                  Cell {{ i }}
+                </div>
+                <div (mousedown)="onResizeEdgeClick($event, i, i + 1)" class="cell-resize cell-resize-right">
+
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td *ngFor="let i of [0, 1, 2, 3, 4]">
+                <div class="cell-resize cell-resize-left">
+
+                </div>
+                <div class="cell-content">
+                  Cell {{ i }}
+                </div>
+                <div (mousedown)="onResizeEdgeClick($event, i, i + 1)" class="cell-resize cell-resize-right">
+
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

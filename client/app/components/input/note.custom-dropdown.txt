@@ -1,0 +1,17 @@
+- Input: hint service, default option, template.
+- Output: key-value pair.
+
+- Khi nào emit output:
+1. Click chọn kết quả trong Dropdown options.
+2. Ấn phím Enter khi có một option đang được chọn bằng phím.
+
+- Khi nào hiển thị Dropdown options (hiển thị song song với truy vấn kết quả mới):
+1. Khi gõ ký tự trong Dropdown input.
+2. Focus trong trường hợp Dropdown input không rỗng.
+
+- Khi nào ẩn Dropdown options:
+1. Khi Options.length = 0.
+2. Khi click bên ngoài Dropdown component.
+
+- Khi nào thay đổi selected value:
+1. Khi dùng phím điều hướng di chuyển trên danh sách options. Enter thì gán giá selected value cho value.

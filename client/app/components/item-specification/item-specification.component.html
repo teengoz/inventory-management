@@ -1,0 +1,32 @@
+<div class="row">
+    <p> </p>
+    <div class="table-responsive col-md-8 col-md-offset-2">
+        <table *ngIf="data" class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-md-2 text-center">
+                        Kích hoạt
+                    </th>
+                    <th class="col-md-2 text-center">
+                        Số thứ tự
+                    </th>
+                    <th class="col-md-6 text-center">Tên hiển thị</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='let i of [0, 1, 2, 3, 4]'>
+                    <td class="col-md-2 text-center">
+                        <input type="checkbox" name="specification+{{i+1}}" [(ngModel)]="data[i].active">
+                        <!--[(ngModel)]="item.checked" (ngModelChange)=onCheck()-->
+                    </td>
+                    <td class="col-md-2 text-center">
+                        {{ i + 1 }}
+                    </td>
+                    <td class="col-md-6 text-center table-row-input">
+                        <input type="text" class="form-control" [(ngModel)]="data[i].name" [disabled]="!data[i].active">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

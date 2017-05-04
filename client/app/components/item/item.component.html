@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-xs-12">
+    <div class="panel" style="margin-bottom: 70px">
+      <div class="panel-header">
+        <h3 class="panel-title">
+          {{ pageName }}
+        </h3>
+      </div>
+      <div class="panel-content">
+        <div class="row">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1default" data-toggle="tab">Thông tin cơ bản</a></li>
+            <li><a href="#tab2default" data-toggle="tab">ĐVT quy đổi</a></li>
+            <li><a href="#tab3default" data-toggle="tab">Thuộc tính hàng hóa</a></li>
+          </ul>
+        </div>
+        <div class="row">
+          <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab1default">
+              <div *ngIf="loaded" class="col-md-10 col-md-offset-1 col-xs-12">
+                <form (ngSubmit)="onSubmit(empForm, $event)" [formGroup]="form">
+                  <div *ngFor="let input of inputs" class="row">
+                    <df-input [input]="input" [form]="form" [values]="data"></df-input>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="tab3default">
+              <im-item-specification #itemSpecificationData>
+              </im-item-specification>
+            </div>
+            <div class="tab-pane fade" id="tab2default">
+              <im-item-unit-conversion #itemUniConversionData>
+              </im-item-unit-conversion>
+            </div>
+          </div>
+
+        </div>
+        <div *ngIf="loaded" class="row">
+          <div class="button-container text-right">
+            <div [ngSwitch]="isEditPage">
+              <div *ngSwitchCase="true">
+                <button class="btn btn-default" [routerLink]="[ '../../../', 'items']">Quay lại</button>
+                <button id="save-back" class="btn btn-primary" (click)="submitForm($event)" [disabled]="!form.valid">Lưu</button>
+              </div>
+              <div *ngSwitchCase="false">
+                <button class="btn btn-default" [routerLink]="[ '../../', 'items']">Quay lại</button>
+                <button id="save-continue" class="btn btn-success" (click)="submitForm($event)" [disabled]="!form.valid">Lưu và thêm</button>
+                <button id="save-back" class="btn btn-primary" (click)="submitForm($event)" [disabled]="!form.valid">Lưu</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

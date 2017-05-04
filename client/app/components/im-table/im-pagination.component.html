@@ -1,0 +1,23 @@
+<div *ngIf="data.total == 0" class="pull-right text-right">
+  <span class="pagination-info-text">Không có kết quả</span>
+</div>
+<div *ngIf="data.totalPage == 1" class="pull-right text-right">
+  <span class="pagination-info-text">Duy nhất 1 trang</span>
+</div>
+<div *ngIf="data.totalPage > 1" class="pull-right text-right">
+  <div class="input-page-container">
+    <span class="input-page-text">Trang: </span>
+    <input type="text" class="input-page form-control" (keyup)=gotoPage($event) [value]=data.currentPage>
+    <span class="total-page">/{{ data.totalPage }}</span>
+  </div>
+  <ul class="pagination">
+    <li class="">
+      <a (click)="goFirstPage(); $event.stopPropagation();">
+        <<</a>
+    </li>
+    <li *ngFor="let page of displayRange" [class.active]="page == data.currentPage"><a (click)="onTurnPage(page); $event.stopPropagation();">{{ page }}</a></li>
+    <li>
+      <a (click)="goLastPage(); $event.stopPropagation();">>></a>
+    </li>
+  </ul>
+</div>

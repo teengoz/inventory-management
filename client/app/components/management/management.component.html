@@ -1,0 +1,85 @@
+<div class="row row-container">
+	<div class="col-sm-12 nopadding">
+		<nav class="navbar navbar-default navbar-static-top" role="navigation">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button #navbarToggler type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                      </button>
+					<a class="navbar-brand" href="" (click)=false>IMAPP</a>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Kho <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a (click)="collapseNav()" routerLink="transaction" routerLinkActive="active">Nhập, xuất, chuyển kho</a></li>
+								<li><a (click)="collapseNav()" routerLink="transaction/create" routerLinkActive="active">Lập phiếu</a></li>
+								<li class="divider"></li>
+								<li class="disabled"><a>Kiểm kê</a></li>
+								<li class="disabled"><a>Tính giá xuất kho</a></li>
+							</ul>
+						</li>
+						<li class="dropdown disabled">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Thủ kho <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<!---->
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Danh mục <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a (click)="collapseNav()" routerLink="stocks" routerLinkActive="active">Danh sách kho</a></li>
+								<li><a (click)="collapseNav()" routerLink="items" routerLinkActive="active">Danh mục hàng hóa</a></li>
+								<li><a (click)="collapseNav()" routerLink="item-categories" routerLinkActive="active">Nhóm hàng hóa</a></li>
+								<li class="divider"></li>					
+								<li><a (click)="collapseNav()" routerLink="stakeholders" routerLinkActive="active">Danh sách đối tác</a></li>
+								<li><a (click)="collapseNav()" routerLink="stakeholder-types" routerLinkActive="active">Nhóm đối tác</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tài khoản nhân viên <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<!--<li><a (click)="collapseNav()" routerLink="users" routerLinkActive="active">Danh sách tài khoản</a></li>
+								<li class="disabled"><a>Quản lý nhóm quyền</a></li>-->
+								<li class="disabled"><a>Danh sách tài khoản</a></li>
+								<li class="disabled"><a>Quản lý nhóm quyền</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Hệ thống <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a (click)="collapseNav()" routerLink="info" routerLinkActive="active">Thông tin công ty</a></li>
+								<li><a (click)="collapseNav()" routerLink="setting" routerLinkActive="active">Thiết lập</a></li>
+								<li class="disabled"><a>Sao lưu - phục hồi</a></li>
+								<li class="disabled"><a>Nhập ký sử dụng</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li><button type="button" class="btn btn-warning navbar-btn">Thông báo <span class="badge badge-danger">3</span></button></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle user-control" data-toggle="dropdown">Chào, Quang <b class="caret"></b></a>
+							<ul class="dropdown-menu" role="menu">
+								<li><a href="#">Đổi mật khẩu</a></li>
+								<li><a (click)=logout()>Đăng xuất</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+	</div>
+</div>
+<div class="row row-container">
+	<div class="col-sm-12 nopadding">
+		<router-outlet></router-outlet>
+	</div>
+</div>

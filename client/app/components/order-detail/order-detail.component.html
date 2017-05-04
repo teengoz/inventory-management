@@ -1,0 +1,20 @@
+<div class="row" style="margin-bottom: 10px">
+    <im-custom-dropdown [options]="_options" [queryService]="queryService" (enterValueEvent)="submitSeletion($event)">
+    </im-custom-dropdown>
+</div>
+<div class="row">
+    <!--<div class="od-table">
+                        <div class="od-heading">
+                            <div class="od-row">
+
+                            </div>
+                        </div>
+                        <div class="od-body">
+                            <div class="od-row">
+
+                            </div>
+                        </div>
+                    </div>-->
+    <im-order-detail-table [(data)]="data">
+    </im-order-detail-table>
+</div>

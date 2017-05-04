@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col-lg-12 col-lg-offset-0 col-md-12 col-md-offset-0 col-xs-12">
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title">
+                    Nhập, xuất, chuyển kho
+                </h3>
+            </div>
+            <div class="panel-content">
+                <div class="row row-control">
+                    <div class="col-sm-6 pull-right text-right control-container">
+                        <button class="btn btn-primary panel-control-btn" routerLink="create">Lập phiếu</button>
+                    </div>
+                    <div class="col-sm-3 pull-left control-container">
+                        <select name="selecter_basic" class="form-control form-control-sub sub-selector">
+                            <option value="">Chọn thao tác</option>
+                            <option value="delete">Xóa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <im-pagination [data]=paginationData (turnPage)="turnPage($event)"></im-pagination>
+                </div>
+                <div class="row">
+                    <div class="table-responsive imc-table-container">
+                        <table class="imc-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1 text-center"><input type="checkbox" (change)=checkAll($event) [(ngModel)]="isCheckedAll"></th>
+                                    <th *ngFor='let col of columns' [id]=col.propName class="col-md-{{ col.width }} {{ (col.sort) ? 'can-sort' : '' }}" (click)="(col.sort) ? onSortClick($event) : ''">{{ col.title }}</th>
+                                    <th class="col-md-1 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="filter-row">
+                                    <td class="col-md-1 text-center">
+                                        <!--<span class="glyphicon glyphicon-filter action-icon" aria-hidden="true"></span>-->
+                                    </td>
+                                    <td *ngFor='let col of columns' class="col-md-{{ col.width }}">
+                                        <input *ngIf="col.filter" (keyup)=onFilter($event) [name]=col.propName type="text" class="col-md-12 form-control" placeholder="{{ col.title }}">
+                                    </td>
+                                    <td class="col-md-1 text-center"></td>
+                                </tr>
+                                <tr *ngFor='let item of data' (click)=onCheckRow(item)>
+                                    <td class="col-md-1 text-center"><input type="checkbox" name="id" value="{{ item.id }}" [(ngModel)]="item.checked" (ngModelChange)=onCheck()></td>
+                                    <td *ngFor='let col of columns' class="col-md-{{ col.width }}">{{ display(item, col) }}</td>
+                                    <td class="col-md-1 text-center">
+                                        <!--<span class="glyphicon glyphicon-pencil action-icon" aria-hidden="true" [routerLink]="['edit', item.inventoryItemCode]"></span>
+                                        <span class="glyphicon glyphicon-trash action-icon" aria-hidden="true" (click)="delete(item); $event.stopPropagation();"></span>-->
+                                    </td>
+                                </tr>
+                                <tr *ngIf="!data || (!!data && data.length == 0)" class="zero-row">
+                                    <td [colSpan]="columns.length+2">
+                                        Trống
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <im-pagination [data]=paginationData (turnPage)="turnPage($event)"></im-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"imdb.system_configs"},{"v":2,"unique":true,"key":{"systemConfigId":1},"name":"systemConfigId_1","ns":"imdb.system_configs","background":true},{"v":2,"unique":true,"key":{"systemConfigFieldName":1},"name":"systemConfigFieldName_1","ns":"imdb.system_configs","background":true}]}

@@ -1,0 +1,14 @@
+.login-container {
+    background-color: #fff;
+}
+
+.logo {
+    padding: 32px 0px;
+    margin: 24px auto 16px;
+}
+
+.reset-password::before {
+    content: " ";
+    height: 10px;
+    display: block;
+}

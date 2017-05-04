@@ -1,0 +1,34 @@
+<tr (click)="edit()">
+    <ng-container *ngIf="!isEditing">
+        <td><span (click)="delete(item); $event.stopPropagation();" class="glyphicon glyphicon-trash action-icon" aria-hidden="true">
+                                        </span>
+        </td>
+        <td>{{ item['label'] }}</td>
+        <td>
+            {{ item['label'] }}
+        </td>
+        <td>{{ item['_localId'] }}</td>
+        <td>Chai</td>
+        <td class="number">10</td>
+        <td class="number">40000</td>
+        <td class="number">400000</td>
+        <td>1</td>
+        <td>2</td>
+    </ng-container>
+    <ng-container *ngIf="isEditing">
+        <td><span (click)="delete(item); $event.stopPropagation();" class="glyphicon glyphicon-trash action-icon" aria-hidden="true">
+                                        </span>
+        </td>
+        <td>{{ item['label'] }}</td>
+        <td>
+            <input type="text" [ngModel]="item['label']">
+        </td>
+        <td>{{ item['_localId'] }}</td>
+        <td>Chai</td>
+        <td class="number">10</td>
+        <td class="number">40000</td>
+        <td class="number">400000</td>
+        <td>1</td>
+        <td>2</td>
+    </ng-container>
+</tr>

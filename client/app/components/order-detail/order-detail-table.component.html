@@ -1,0 +1,145 @@
+<div class="order-table-container imc-table-container table-responsive">
+    <table #table class="imc-table order-table" [style.width.px]='getTableWidth()'>
+        <!--Table Header-->
+        <thead>
+            <tr>
+                <th class="action" [style.width.px]='50'>Xóa</th>
+                <th [style.width.px]='colWidth[1]'>
+                    Mặt hàng
+                    <div *ngIf="fixedCol.indexOf(1) < 0" (mousedown)="onResizeEdgeClick($event, 1, 2)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+                <th [style.width.px]='colWidth[2]'>
+                    Kho
+                    <div *ngIf="fixedCol.indexOf(2) < 0" (mousedown)="onResizeEdgeClick($event, 2, 3)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+                <th [style.width.px]='colWidth[3]'>
+                    ĐVT
+                    <div *ngIf="fixedCol.indexOf(3) < 0" (mousedown)="onResizeEdgeClick($event, 3, 4)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+                <th [style.width.px]='colWidth[4]'>
+                    S.Lg
+                    <div *ngIf="fixedCol.indexOf(4) < 0" (mousedown)="onResizeEdgeClick($event, 4, 5)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+                <th [style.width.px]='colWidth[5]'>
+                    Đơn giá
+                    <div *ngIf="fixedCol.indexOf(5) < 0" (mousedown)="onResizeEdgeClick($event, 5, 6)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+                <th [style.width.px]='colWidth[6]'>
+                    Thành tiền
+                    <div *ngIf="fixedCol.indexOf(6) < 0" (mousedown)="onResizeEdgeClick($event, 6, 7)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+                <th [style.width.px]='colWidth[7]'>
+                    Số lô
+                    <div *ngIf="fixedCol.indexOf(7) < 0" (mousedown)="onResizeEdgeClick($event,7, 8)" class="cell-resize cell-resize-right">
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='let item of data' (click)="edit(item)" [ngClass]="{ 'editing': (item['_localId'] == currentEditingRow) }">
+                <ng-container *ngIf="!(item['_localId'] == currentEditingRow)">
+                    <td class="action" data-header="Xóa">
+                        <span (click)="delete(item); $event.stopPropagation();" class="glyphicon glyphicon-trash action-icon"
+                            aria-hidden="true">
+                        </span>
+                    </td>
+                    <td data-header="Mặt hàng">
+                        <div class="header-text">
+                            Mặt hàng
+                        </div>
+                        <div class="value-text">
+                            <span class="item-code">{{ item['itemCode'] }}</span> - {{ item['itemName'] }}
+                        </div>
+                    </td>
+                    <td data-header="Kho">
+                        <div class="header-text">
+                            Kho
+                        </div>
+                        <div class="value-text">
+                            {{ item['stockName'] }}
+                            <input type="hidden" value="{{ item['stockId'] }}">
+                        </div>
+                    </td>
+                    <td data-header="ĐVT">
+                        <div class="header-text">
+                            ĐVT
+                        </div>
+                        <div class="value-text">
+                            {{ item['unit'] }}
+                            <input type="hidden" value="1">
+                        </div>
+                    </td>
+                    <td data-header="S.Lg" class="number">
+                        <div class="header-text">
+                            Số lượng
+                        </div>
+                        <div class="value-text number-cell">
+                            {{ item['quantity'] }}
+                        </div>
+                    </td>
+                    <td data-header="Đơn giá" class="number">
+                        <div class="header-text">
+                            Đơn giá
+                        </div>
+                        <div class="value-text number-cell">
+                            {{ item['price'] }}
+                        </div>
+                    </td>
+                    <td data-header="Thành tiền" class="number">
+                        <div class="header-text">
+                            Thành tiền
+                        </div>
+                        <div class="value-text number-cell">
+                            {{ item['amount'] }}
+                        </div>
+                    </td>
+                    <td data-header="Số lô">{{ item['lotNo'] }}</td>
+                </ng-container>
+                <ng-container *ngIf="(item['_localId'] == currentEditingRow)">
+                    <td class="action">
+                        <span (click)="delete(item); $event.stopPropagation();" class="glyphicon glyphicon-trash action-icon" aria-hidden="true">
+                        </span>
+                    </td>
+                    <td><span class="item-code">{{ item['itemCode'] }}</span> - {{ item['itemName'] }}</td>
+                    <td>
+                        <im-form-dropdown
+                            [queryService]="stockServiceClass"
+                            [(value)]="item['stock']"
+                            [(label)]="item['stockName']"
+                            [valueField]="'stockId'"
+                            [labelField]="'stockName'"
+                            [placeholder]="'Chọn kho'">
+                        </im-form-dropdown>
+                    </td>
+                    <td>
+                        <select [(ngModel)]="item['unit']" name="" id="" class="form-control">
+                            <option *ngFor="let item of item['unitList']" value="{{ item }}">{{ item }}</option>
+                        </select>
+                    </td>
+                    <td class="number">
+                        <input [(ngModel)]="item['quantity']" placeholder="Số lượng" class="form-control" type="number" value="10">
+                    </td>
+                    <td class="number">
+                        <input [(ngModel)]="item['price']" placeholder="Đơn giá" class="form-control" type="number" value="40000">
+                    </td>
+                    <td class="number">
+                        {{ item['amount'] }}
+                    </td>
+                    <td>
+                        <input [(ngModel)]="item['lotNo']" class="form-control" type="text">
+                    </td>
+                </ng-container>
+            </tr>
+            <tr *ngIf="!data || (!!data && data.length == 0)" class="zero-row">
+                <td [colSpan]="8" class="empty-row">
+                    Hãy thêm sản phẩm vào danh sách
+                </td>
+            </tr>
+        </tbody>
+    </table>

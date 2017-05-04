@@ -1,0 +1,51 @@
+<div class="row text-center">
+    <div class="logo">
+        <img src="../../../assets/img/imapp.png" alt="" height="72px">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4 col-xs-12">
+        <div class="login-container panel">
+            <div class="panel-header">
+                <h3 class="panel-title">
+                    Đăng nhập hệ thống
+                </h3>
+            </div>
+            <div class="panel-content">
+                <form name="form" class="form-horizontal" #f="ngForm" (ngSubmit)="f.form.valid && login();" novalidate>
+                    <div class="row">
+                        <div *ngIf="error" class="alert alert-danger">{{error}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !username.valid }">
+                                <label for="username">Tên đăng nhập: </label>
+                                <input type="text" class="form-control" name="username" [(ngModel)]="loginF.username" #username="ngModel" required>
+                                <div *ngIf="f.submitted && !username.valid" class="help-block">Username is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" [ngClass]="{ 'has-error': f.submitted && !password.valid }">
+                                <label for="password">Mật khẩu: </label>
+                                <input type="password" class="form-control" name="password" [(ngModel)]="loginF.password" #password="ngModel" required>
+                                <div *ngIf="f.submitted && !username.valid" class="help-block">Password is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-8 col-xs-12 pull-right nopadding">
+                            <button [disabled]="loading" class="btn btn-primary pull-right col-sm-6 col-xs-12">Đăng nhập</button>
+                            <!--<img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                            />-->
+                        </div>
+                        <div class="col-sm-4 col-xs-12 pull-left nopadding reset-password">
+                            <a href="#">&rsaquo; Đặt lại mật khẩu</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
