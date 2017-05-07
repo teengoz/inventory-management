@@ -2,9 +2,8 @@ language: node_js
 sudo: required
 node_js:
   - "7.7.3"
-  - "4.0"
-  - "0.10"
-  - "iojs"
+  - "7.7"
 install:
-  - npm install
-  - npm run dev
+  - sudo apt-get update && sudo apt-get install yarn
+  - sudo yarn install
+  - sudo yarn run dev
