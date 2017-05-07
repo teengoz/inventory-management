@@ -6,4 +6,4 @@ node_js:
 install:
   - sudo apt-get update && sudo apt-get install yarn
   - sudo yarn install
-  - sudo yarn run dev
+  - sudo yarn run build
