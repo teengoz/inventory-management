@@ -1,0 +1,7 @@
+language: javascript
+solution: inventory-management
+install:
+– sudo apt-get update && sudo apt-get install yarn
+– sudo yarn install
+script:
+– sudo yarn run dev
