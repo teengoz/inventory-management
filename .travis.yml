@@ -1,8 +1,7 @@
 language: node_js
 sudo: required
 node_js:
-  - "7.7.3"
-  - "7.7"
+  - "stable"
 install:
   - yarn install
   - yarn run build
