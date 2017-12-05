@@ -5,6 +5,7 @@ import { Modal, BSModalContext } from 'angular2-modal/plugins/bootstrap';
 
 import { routerTransition } from '../../app.animation';
 import { TransactionService } from '../../services/transaction.service';
+import { Transaction } from "../../models/transaction";
 
 @Component({
     selector: 'im-transaction-list',
@@ -29,7 +30,7 @@ export class TransactionListComponent implements OnInit {
             title: 'Số',
             propName: 'transactionNo',
             displayMethod: '',
-            width: 1,
+            width: 2,
             sort: true,
             filter: true
         },
@@ -45,7 +46,7 @@ export class TransactionListComponent implements OnInit {
             title: 'Đối tượng',
             propName: 'stakeholder.stakeholderName',
             displayMethod: '',
-            width: 2,
+            width: 3,
             sort: true,
             filter: true
         },
@@ -57,14 +58,14 @@ export class TransactionListComponent implements OnInit {
             sort: true,
             filter: false
         },
-        {
-            title: 'Tổng tiền',
-            propName: 'transactionAmount',
-            displayMethod: 'transactionAmountDisplay',
-            width: 2,
-            sort: true,
-            filter: false
-        }
+        // {
+        //     title: 'Tổng tiền',
+        //     propName: 'transactionAmount',
+        //     displayMethod: 'transactionAmountDisplay',
+        //     width: 2,
+        //     sort: true,
+        //     filter: false
+        // }
     ];
 
     data: any[];
@@ -171,6 +172,27 @@ export class TransactionListComponent implements OnInit {
 
     // -------------------------------------
     // Data actions
+    callDelete(object) {
+        let dialog = this.modal.confirm()
+            .title('Xác nhận xóa')
+            .okBtn('Đồng ý')
+            .cancelBtn('Hủy')
+            .showClose(true)
+            .size('sm')
+            .body('Bạn có đồng ý xóa Đối tượng đã chọn')
+            .open();
+        
+        event.stopPropagation();
+
+        dialog.then(resultPromise => {
+            return resultPromise.result
+                .then(result => {
+                    this.delete(object);
+                }, () => console.log('Rejected')
+                );
+        });
+    }
+
     delete(object) {
         event.stopPropagation();
         this.transactionService.delete(object)
@@ -213,6 +235,19 @@ export class TransactionListComponent implements OnInit {
         // });
     }
 
+    record(transaction: Transaction, record: boolean) {
+        this.transactionService
+            .record(transaction.transactionId, record)
+            .then(
+            result => {
+                this.fetchData();
+            },
+            error => {
+                console.log(error);
+            }
+        );
+    }
+
     add() {
         //this.callDataAction(this.actions['add']);
     }
@@ -248,6 +283,8 @@ export class TransactionListComponent implements OnInit {
                 case 'delete':
                     let dialog = this.modal.confirm()
                         .title('Xác nhận xóa')
+                        .okBtn('Đồng ý')
+                        .cancelBtn('Hủy')
                         .showClose(true)
                         .size('sm')
                         .body('Bạn có đồng ý xóa các đối tượng đã chọn')

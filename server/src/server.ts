@@ -16,7 +16,7 @@ require('./config/passport');
 
 import path = require('path');
 var port: number = process.env.PORT || 3000;
-var env:string = process.env.NODE_ENV || 'developement';
+var env: string = process.env.NODE_ENV || 'developement';
 
 var app = express();
 
@@ -40,7 +40,7 @@ var renderIndex = (req: express.Request, res: express.Response) => {
 
 app.get('/*', renderIndex);
 
-if(env === 'developement'){
+if (env === 'developement') {
     app.use(function(err, req: express.Request, res: express.Response, next: express.NextFunction) {
         res.status(err.status || 500);
         res.json({

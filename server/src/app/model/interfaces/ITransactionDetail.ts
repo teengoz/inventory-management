@@ -3,9 +3,10 @@ import mongoose = require("mongoose")
 interface ITransactionDetail extends mongoose.Document {
     transactionDetailId: string;
     transaction: any;
+    transactionType: number;
     inventoryItem: any;
     stock: any;
-    sencondStock: any;
+    secondStock: any;
     unit: string;
     quantity: number;
     price: number;
@@ -13,6 +14,7 @@ interface ITransactionDetail extends mongoose.Document {
     conversionRate: number;
     conversionOperator: string;
     realQuantity: number;
+    lotNo: string;
     createdBy: any;
     updatedBy: any;
     createdAt: Date;

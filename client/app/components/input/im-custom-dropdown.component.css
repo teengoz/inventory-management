@@ -41,3 +41,7 @@
 .hovered-selection {
     background-color: #eaeaea;
 }
+
+.instock {
+    float: right;
+}

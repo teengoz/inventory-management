@@ -29,11 +29,32 @@ class TransactionController implements IBaseController<TransactionBusiness> {
         }
     }
 
-    update = (req: express.Request, res: express.Response): void => {
+    record(req: express.Request, res: express.Response): void {
+        console.log('RECORD');
+        try {
+            let transactionBusiness = new TransactionBusiness();
+            let _id: string = req.params._id;
+            let _record: string = req.params._record;
+            transactionBusiness.record(_id, _record, (error, result) => {
+                if (error) {
+                    console.log(error);
+                    res.send({ "error": "error" });
+                }
+                else
+                    res.send({ "success": true });
+            });
+        }
+        catch (e) {
+            console.log(e);
+            res.send({ "error": "error in your request" });
+        }
+    }
+
+    update(req: express.Request, res: express.Response): void {
         console.log('UPDATE');
         try {
             let transactionBusiness = new TransactionBusiness();
-            transactionBusiness.updateItem(req, (error, result) => {
+            transactionBusiness.updateByRequestData(req, (error, result) => {
                 if (error) {
                     console.log(error);
                     res.send({ "error": "error" });
@@ -65,7 +86,7 @@ class TransactionController implements IBaseController<TransactionBusiness> {
         try {
             var _id: string = req.params._id;
             var transactionBusiness = new TransactionBusiness();
-            transactionBusiness.delete(_id, (error, result) => {
+            transactionBusiness.delete(_id, (error) => {
                 if (error)
                     res.send({ "error": "error" });
                 else
@@ -165,26 +186,6 @@ class TransactionController implements IBaseController<TransactionBusiness> {
         }
     }
 
-    // search(req: express.Request, res: express.Response): void {
-    //     try {
-    //         let keyword: string = req.params._keyword;
-    //         let _keyword: string = keyword || '';
-    //         var transactionBusiness = new TransactionBusiness();
-    //         transactionBusiness.search(_keyword, (error, result) => {
-    //             let jsonObj = new JsonResponse(true, result);
-    //             if (error)
-    //                 res.send({ "error": "error" });
-    //             else
-    //                 res.status(200).json(jsonObj.return());
-    //         });
-    //     }
-    //     catch (e) {
-    //         console.log(e);
-    //         res.send({ "error": "error in your request" });
-    //
-    //     }
-    // };
-
     findById(req: express.Request, res: express.Response): void {
         try {
             var _id: string = req.params._id;
@@ -193,28 +194,6 @@ class TransactionController implements IBaseController<TransactionBusiness> {
                 let jsonObj = new JsonResponse(true, result);
                 if (error) res.send({ "error": "error" });
                 else res.status(200).json(jsonObj.return());
-            });
-        }
-        catch (e) {
-            console.log(e);
-            res.send({ "error": "error in your request" });
-
-        }
-    }
-
-    findCode(req: express.Request, res: express.Response): void {
-        try {
-
-            var _code: string = req.params._code;
-            var transactionBusiness = new TransactionBusiness();
-            transactionBusiness.findCode(_code, (error, result) => {
-                if (error)
-                    res.send({ "error": "error" });
-                else {
-                    let item = result;
-                    let jsonObj = new JsonResponse(true, item);
-                    res.status(200).json(jsonObj.return());
-                }
             });
         }
         catch (e) {

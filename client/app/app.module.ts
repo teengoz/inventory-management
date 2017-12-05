@@ -28,6 +28,7 @@ import { IMPagination } from './components/im-table/im-pagination.component';
 import { ManagementPageComponent } from './components/management-page/management-page.component';
 import { LoginComponent } from './components/login/login.component';
 import { ManagementComponent } from './components/management/management.component';
+import { PasswordComponent } from './components/password/password.component';
 import { SettingComponent } from "./components/setting/setting.component";
 import { InfoComponent } from "./components/info/info.component";
 import { ItemListComponent } from "./components/item-list/item-list.component";
@@ -47,6 +48,9 @@ import { IMFormDropdownComponent } from "./components/input/im-form-dropdown.com
 import { TransactionListComponent } from './components/transaction/transaction-list.component';
 import { TransactionComponent } from "./components/transaction/transaction.component";
 import { TestComponent } from './components/test-component/test-component.component';
+import { TransactionDetailComponent } from "./components/transaction/transaction-detail.component";
+import { TransactionDetailTableComponent } from "./components/transaction/transaction-detail-table.component";
+import { TransactionRequestListComponent } from "./components/transaction-request/transaction-request-list.component";
 
 @NgModule({
     imports: [
@@ -77,6 +81,7 @@ import { TestComponent } from './components/test-component/test-component.compon
         ManagementPageComponent,
         LoginComponent,
         ManagementComponent,
+        PasswordComponent,
         SettingComponent,
         InfoComponent,
         ItemListComponent,
@@ -94,7 +99,10 @@ import { TestComponent } from './components/test-component/test-component.compon
         OrderDetailTableComponent,
         IMFormDropdownComponent,
         TransactionListComponent,
-        TransactionComponent
+        TransactionComponent,
+        TransactionDetailComponent,
+        TransactionDetailTableComponent,
+        TransactionRequestListComponent
     ],
     providers: [
         AuthenticationService,

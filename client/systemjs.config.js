@@ -11,7 +11,6 @@ var isPublic = typeof window != "undefined";
     'angular2-modal':             (isPublic)? 'angular2-modal' : 'node_modules/angular2-modal',
     'ng-select':                  (isPublic)? 'ng-select' : 'node_modules/ng-select',
     'primeng':                    (isPublic)? 'primeng' : 'node_modules/primeng',
-    
   };
   // packages tells the System loader how to load when no filename and/or no extension
   var packages = {

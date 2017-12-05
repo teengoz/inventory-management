@@ -25,6 +25,7 @@ export class IMFormDropdownComponent implements OnInit, DoCheck, AfterViewChecke
     @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
     @Output() labelChange: EventEmitter<string> = new EventEmitter<string>();
     @ViewChild('dropdownContainer') private dropdownContainer: ElementRef;
+    @ViewChild('dropdownInput') private dropdownInput: ElementRef;
 
     optionsArray = [];
     isHideOptions = true;
@@ -33,6 +34,7 @@ export class IMFormDropdownComponent implements OnInit, DoCheck, AfterViewChecke
     isDisabled = false;
     currentIndex = -1;
     termInput = '';
+    dropdownInputWidth = 200;
 
     constructor(
         private http: Http,
@@ -211,6 +213,8 @@ export class IMFormDropdownComponent implements OnInit, DoCheck, AfterViewChecke
             if (result.length > 0) {
                 this.optionsArray = result;
                 this.isHideOptions = false;
+                this.dropdownInputWidth = this.dropdownInput.nativeElement.clientWidth;
+                console.log(this.dropdownInput.nativeElement.clientWidth);
             } else {
                 this.isHideOptions = true;
             }

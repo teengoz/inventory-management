@@ -2,6 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './components/login/login.component';
 import { ManagementComponent } from './components/management/management.component';
+import { PasswordComponent } from './components/password/password.component';
 import { SettingComponent } from "./components/setting/setting.component";
 import { InfoComponent } from "./components/info/info.component";
 import { ItemListComponent } from "./components/item-list/item-list.component";
@@ -17,6 +18,7 @@ import { TransactionComponent } from "./components/transaction/transaction.compo
 import { TestComponent } from './components/test-component/test-component.component';
 
 import { AuthGuard } from './guards/auth.guard';
+import { TransactionRequestListComponent } from "./components/transaction-request/transaction-request-list.component";
 
 const appRoutes: Routes = [
   {
@@ -33,6 +35,10 @@ const appRoutes: Routes = [
     component: ManagementComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: 'password',
+        component: PasswordComponent
+      },
       {
         path: 'test',
         component: TestComponent
@@ -87,7 +93,7 @@ const appRoutes: Routes = [
         ]
       },
       {
-        path: 'transaction',
+        path: 'transactions',
         children: [
           {
             path: '',
@@ -95,6 +101,23 @@ const appRoutes: Routes = [
           },
           {
             path: 'create',
+            component: TransactionComponent
+          },
+          {
+            path: 'edit/:_id',
+            component: TransactionComponent
+          }
+        ]
+      },
+      {
+        path: 'transaction-requests',
+        children: [
+          {
+            path: '',
+            component: TransactionRequestListComponent
+          },
+          {
+            path: 'record/:_id',
             component: TransactionComponent
           }
         ]

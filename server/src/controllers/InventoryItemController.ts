@@ -172,9 +172,9 @@ class InventoryItemController implements IBaseController<InventoryItemBusiness> 
             var inventoryItemBusiness = new InventoryItemBusiness();
             inventoryItemBusiness.search(_keyword, (error, result) => {
                 let jsonObj = new JsonResponse(true, result);
-                if (error) 
+                if (error)
                     res.send({ "error": "error" });
-                else 
+                else
                     res.status(200).json(jsonObj.return());
             });
         }
@@ -190,6 +190,23 @@ class InventoryItemController implements IBaseController<InventoryItemBusiness> 
             var _id: string = req.params._id;
             var inventoryItemBusiness = new InventoryItemBusiness();
             inventoryItemBusiness.findById(_id, (error, result) => {
+                let jsonObj = new JsonResponse(true, result);
+                if (error) res.send({ "error": "error" });
+                else res.status(200).json(jsonObj.return());
+            });
+        }
+        catch (e) {
+            console.log(e);
+            res.send({ "error": "error in your request" });
+
+        }
+    }
+
+    getQuantity(req: express.Request, res: express.Response): void {
+        try {
+            var _id: string = req.params._id;
+            var inventoryItemBusiness = new InventoryItemBusiness();
+            inventoryItemBusiness.getQuantity(_id, (error, result) => {
                 let jsonObj = new JsonResponse(true, result);
                 if (error) res.send({ "error": "error" });
                 else res.status(200).json(jsonObj.return());

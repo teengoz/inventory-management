@@ -246,7 +246,7 @@ export class OrderDetailComponent implements OnInit, DoCheck {
 
     onCheck() {
         let check = 0;
-        this._data.forEach(function(el, idx) {
+        this._data.forEach(function (el, idx) {
             check += ((<any>el).checked) ? 1 : 0;
         });
         this.isCheckedAll = (check == this._data.length);
@@ -254,7 +254,7 @@ export class OrderDetailComponent implements OnInit, DoCheck {
 
     checkAll(event) {
         let check = event.target.checked;
-        this._data.forEach(function(el, idx) {
+        this._data.forEach(function (el, idx) {
             (<any>el).checked = check;
         });
     }
@@ -374,6 +374,7 @@ export class OrderDetailComponent implements OnInit, DoCheck {
         } else {
             this._data = [];
         }
+        //this._data = [];
     }
 
     private removeLocalId(data) {
@@ -395,7 +396,10 @@ export class OrderDetailComponent implements OnInit, DoCheck {
     // -------------------------------------
     // Data actions
     delete(object) {
-        event.stopPropagation();
+        //event.stopPropagation();
+        if (!object || !object['_localId']) {
+            return;
+        }
         let _deletedId = object['_localId'];
         let _index = this.findIndexOfLocalId(this._data, _deletedId);
         if (_index >= 0) {
@@ -407,8 +411,8 @@ export class OrderDetailComponent implements OnInit, DoCheck {
     }
 
     deleteItems(objectList: any[]) {
-        objectList.forEach((elm, index) => {
-            this.delete(elm);
-        });
+        for (let i = 0; i < objectList.length; i++) {
+            this.delete(objectList[i]);
+        }
     }
 }

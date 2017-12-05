@@ -1,134 +1,150 @@
 <div class="row">
-  <div class="col-lg-12 col-md-12 col-xs-12">
-    <div class="panel" style="margin-bottom: 70px">
-      <div class="panel-header">
-        <h3 class="panel-title">
-          {{ pageName }}
-        </h3>
-      </div>
-      <div class="panel-content">
-        <div class="row section-container transcation-type">
-          <div class="section-header row">
-            <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
-            <span class="section-header-text">Loại phiếu</span>
-          </div>
-          <div class="section-content row">
-            <form action="" class="horizontal" [formGroup]="transcationTypeForm">
-              <label class="radio-inline">
-                <input type="radio" name="transactionType" formControlName="transactionType" value="1">Nhập kho
+    <div class="col-lg-12 col-md-12 col-xs-12">
+        <div class="panel" style="margin-bottom: 70px">
+            <div class="panel-header">
+                <h3 class="panel-title">
+                    {{ pageName }}
+                </h3>
+            </div>
+            <div class="panel-content">
+                <div class="row section-container transcation-type" *ngIf="!isEditPage">
+                    <div class="section-header row">
+                        <span class="section-header-text">Loại phiếu</span>
+                    </div>
+                    <div class="section-content row">
+                        <form action="" class="horizontal" [formGroup]="transcationTypeForm">
+                            <label class="radio-inline">
+                <input [(ngModel)]="transactionType" type="radio" name="transactionType" formControlName="transactionType" value="1">Nhập kho
               </label>
-              <label class="radio-inline">
-                <input type="radio" name="transactionType" formControlName="transactionType" value="2">Xuất kho
+                            <label class="radio-inline">
+                <input [(ngModel)]="transactionType" type="radio" name="transactionType" formControlName="transactionType" value="2">Xuất kho
               </label>
-              <label class="radio-inline">
-                <input type="radio" name="transactionType" formControlName="transactionType" value="3">Chuyển kho
+                            <label class="radio-inline">
+                <input [(ngModel)]="transactionType" type="radio" name="transactionType" formControlName="transactionType" value="3">Chuyển kho
               </label>
-            </form>
-          </div>
-        </div>
-        <div class="inline-sestions-container">
-        <div class="row section-container section-info">
-          <div class="section-header row">
-            <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
-            <span class="section-header-text">Thông tin phiếu</span>
-          </div>
-          <div class="section-content row">
-            <div *ngIf="!isTransactionTypeChecked()" class="disabled"></div>
-            <form action="" class="form-horizontal">
-              <div *ngIf="(getTransactionType() == 1 || getTransactionType()==2)" class="form-group row">
-                <label for="description" class="control-label col-sm-2">Khách hàng/NCC: <span class="required">*</span></label>
-                <div class="input-container">
-                  <im-form-dropdown
-                    [queryService]="stakeholderServiceClass"
-                    [(value)]="stakeholder"
-                    [(label)]="stakeholdername"
-                    [valueField]="'stakeholderId'"
-                    [labelField]="'stakeholderName'">
-                  </im-form-dropdown>
+                        </form>
+                    </div>
                 </div>
-                <div class="add-btn-container">
-                  <button type="button" class="btn btn-primary" (click)="add()">
+
+                <div class="row section-container transcation-type" *ngIf="isEditPage">
+                    <div class="section-header row">
+                        <span class="section-header-text">Trạng thái</span>
+                    </div>
+                    <div class="section-content row">
+                        <ng-container *ngIf="isRecorded">
+                            <span style="font-weight: bold; color: red;">Đã ghi sổ</span>
+                            <span> | </span>
+                            <span class="action-icon" (click)="isRecorded=false; $event.stopPropagation();">
+                  <span
+                  class="glyphicon glyphicon-remove"
+                  aria-hidden="true"
+                  >
+                  </span>
+                            <span>
+                      Bỏ ghi
+                  </span>
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="!isRecorded">
+                            <span style="font-weight: bold; color: red;">Chưa ghi sổ</span>
+                            <span> | </span>
+                            <span class="action-icon" (click)="isRecorded=true; $event.stopPropagation();">
+                  <span
+                  class="glyphicon glyphicon-ok"
+                  aria-hidden="true"
+                  >
+                  </span>
+                            <span>
+                      Ghi
+                  </span>
+                            </span>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div class="inline-sestions-container">
+                    <div class="row section-container section-info">
+                        <div class="section-header row">
+                            <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
+                            <span class="section-header-text">Thông tin phiếu</span>
+                        </div>
+                        <div class="section-content row">
+                            <div *ngIf="isReadOnlyMode()" class="disabled"></div>
+                            <form action="" class="form-horizontal">
+                                <div *ngIf="(transactionType == 1 || transactionType == 2)" class="form-group row">
+                                    <label for="stakeholder" class="control-label col-sm-2">Khách hàng/NCC:</label>
+                                    <div class="input-container">
+                                        <im-form-dropdown #dropdownStakeholder [queryService]="stakeholderServiceClass" [(value)]="stakeholder" [(label)]="stakeholdername" [valueField]="'stakeholderId'" [labelField]="'stakeholderName'">
+                                        </im-form-dropdown>
+                                    </div>
+                                    <div class="add-btn-container">
+                                        <button type="button" class="btn btn-primary" (click)="add()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                   </button>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="description" class="control-label col-sm-2">Diễn giải:</label>
+                                    <div>
+                                        <input [(ngModel)]="description" type="text" class="form-control" id="description" name="description">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row section-container section-ref">
+                        <div class="section-header row">
+                            <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
+                            <span class="section-header-text">Chứng từ</span>
+                        </div>
+                        <div class="section-content row">
+                            <div *ngIf="isReadOnlyMode()" class="disabled"></div>
+                            <form action="" class="form-horizontal">
+                                <div class="form-group row">
+                                    <label for="refNo" class="control-label col-sm-2">Số chứng từ: </label>
+                                    <div>
+                                        <input type="text" class="form-control" id="refNo" name="refNo" placeholder="Tự động sinh" value="{{ transactionNo }}" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="description" class="control-label col-sm-2">Ngày: </label>
+                                    <div>
+                                        <p-calendar [inputStyleClass]="'datetime-picker form-control'" [(ngModel)]="timeValue" [ngModelOptions]="{standalone: true}" dateFormat="dd/mm/yy" [monthNavigator]="true" [yearNavigator]="true" yearRange="2000:2100">
+                                        </p-calendar>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="description" class="control-label col-sm-2">Diễn giải: <span class="required">*</span></label>
-                <div>
-                  <input [(ngModel)]="description" type="text" class="form-control" id="description" name="description">
+                <div class="clear"></div>
+                <div class="row section-container">
+                    <div class="section-header row">
+                        <span class="section-header-text">Chi tiết phiếu nhập</span>
+                    </div>
+                    <div class="section-content row">
+                        <div *ngIf="isReadOnlyMode()" class="disabled"></div>
+                        <im-transaction-detail #imTransactionDetail [plainData]="transactionDetail" [(data)]="orderDetailData">
+                        </im-transaction-detail>
+                    </div>
                 </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="row section-container section-ref">
-          <div class="section-header row">
-            <!--<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>-->
-            <span class="section-header-text">Chứng từ</span>
-          </div>
-          <div class="section-content row">
-            <div *ngIf="!isTransactionTypeChecked()" class="disabled"></div>
-            <form action="" class="form-horizontal">
-              <div class="form-group row">
-                <label for="refNo" class="control-label col-sm-2">Số chứng từ: </label>
-                <div>
-                  <input type="text" class="form-control" id="refNo" name="refNo" placeholder="Tự động sinh" disabled>
+                <div *ngIf="loaded" class="row">
+                    <div class="button-container text-right">
+                        <div [ngSwitch]="isEditPage">
+                            <div *ngSwitchCase="true">
+                                <button class="btn btn-default" [routerLink]="[ '../../../', 'transactions']">Quay lại</button>
+                                <button id="save-back" class="btn btn-primary" (click)="submit($event)" [disabled]="(transactionType == undefined)">Lưu</button>
+                            </div>
+                            <div *ngSwitchCase="false">
+                                <button class="btn btn-default" [routerLink]="[ '../../', 'transactions']">Quay lại</button>
+                                <button id="save-record" class="btn btn-success" (click)="submit($event)" [disabled]="(transactionType == undefined )">Lưu và ghi</button>
+                                <button id="save" class="btn btn-primary" (click)="submit($event)" [disabled]="(transactionType == undefined)">Lưu</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="description" class="control-label col-sm-2">Ngày: </label>
-                <div>
-                  <p-calendar
-                    [inputStyleClass]="'datetime-picker form-control'"
-                    [(ngModel)]="timeValue"
-                    [ngModelOptions]="{standalone: true}"
-                    dateFormat="dd/mm/yy"
-                    [monthNavigator]="true"
-                    [yearNavigator]="true"
-                    yearRange="2000:2100"
-                  >
-                  </p-calendar>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        </div>
-        <div class="clear"></div>
-        <div class="row section-container">
-          <div class="section-header row">
-            <span class="section-header-text">Chi tiết phiếu nhập</span>
-          </div>
-          <div class="section-content row">
-            <div *ngIf="!isTransactionTypeChecked()" class="disabled"></div>
-            <im-order-detail
-              [(data)]="orderDetailData"
-            >
-            </im-order-detail>
-          </div>
-        </div>
-        <div *ngIf="loaded" class="row">
-          <div class="button-container text-right">
-            <div>
-              <button class="btn btn-default" [routerLink]="[ '../../', 'transaction']">Quay lại</button>
-              <button id="save-record" class="btn btn-success" (click)="submit($event)">Lưu và ghi</button>
-              <button id="save" class="btn btn-primary" (click)="submit($event)">Lưu</button>
-            </div>
-            <!--<div [ngSwitch]="isEditPage">
-              <div *ngSwitchCase="true">
-                <button class="btn btn-default" [routerLink]="[ '../../../', 'transaction']">Quay lại</button>
-                <button id="save-back" class="btn btn-primary" (click)="submitForm($event)" [disabled]="!form.valid">Lưu</button>
-              </div>
-              <div *ngSwitchCase="false">
-                <button class="btn btn-default" [routerLink]="[ '../../', 'transaction']">Quay lại</button>
-                <button id="save-continue" class="btn btn-success" (click)="submitForm($event)" [disabled]="!form.valid">Lưu và ghi sổ</button>
-                <button id="save-back" class="btn btn-primary" (click)="submitForm($event)" [disabled]="!form.valid">Lưu</button>
-              </div>
-            </div>-->
-          </div>
-        </div>
 
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

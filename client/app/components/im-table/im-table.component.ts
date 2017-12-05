@@ -279,9 +279,11 @@ export class IMTableComponent implements OnInit, AfterViewInit {
                 case 'delete':
                     let dialog = this.modal.confirm()
                         .title('Xác nhận xóa')
+                        .okBtn('Đồng ý')
+                        .cancelBtn('Hủy')
                         .showClose(true)
                         .size('sm')
-                        .body('Bạn có đồng ý xóa các Kho đã chọn')
+                        .body('Bạn có chắc chắn xóa các Đối tượng đã chọn?')
                         .open();
 
                     dialog.then(resultPromise => {
@@ -407,6 +409,27 @@ export class IMTableComponent implements OnInit, AfterViewInit {
                     this.fetchData();
                 }
             });
+    }
+
+    callDelete(object) {
+        let dialog = this.modal.confirm()
+            .title('Xác nhận xóa')
+            .okBtn('Đồng ý')
+            .cancelBtn('Hủy')
+            .showClose(true)
+            .size('sm')
+            .body('Bạn có đồng ý xóa Đối tượng đã chọn')
+            .open();
+        
+        event.stopPropagation();
+
+        dialog.then(resultPromise => {
+            return resultPromise.result
+                .then(result => {
+                    this.delete(object);
+                }, () => console.log('Rejected')
+                );
+        });
     }
 
     deleteItems(objectList: any[]) {

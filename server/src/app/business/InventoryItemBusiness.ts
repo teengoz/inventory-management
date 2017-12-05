@@ -1,14 +1,18 @@
 import InventoryItemRepository = require("../repository/InventoryItemRepository");
+import TransactionDetailRepository = require("../repository/TransactionDetailRepository")
 import IInventoryItemBusiness = require("./interfaces/IInventoryItemBusiness");
+import TransactionDetailBusiness = require("./TransactionDetailBusiness");
 import IInventoryItem = require("../model/interfaces/IInventoryItem");
 import InventoryItem = require("../model/InventoryItem");
 
 
 class InventoryItemBusiness implements IInventoryItemBusiness {
     private _inventoryitemRepository: InventoryItemRepository;
+    private _transactionDetailRepository: TransactionDetailRepository;
 
     constructor() {
         this._inventoryitemRepository = new InventoryItemRepository();
+        this._transactionDetailRepository = new TransactionDetailRepository();
     }
 
     create(req, callback: (error: any, result: any) => void) {
@@ -40,6 +44,11 @@ class InventoryItemBusiness implements IInventoryItemBusiness {
         if (!body['inventoryItemCode']) {
             let newId = new Date().getTime().toString();
             item['inventoryItemCode'] = newId;
+        } else {
+            this.findCode(body['inventoryItemCode'], (error, result) => {
+                console.log('**********************************');
+                console.log(result);
+            });
         }
 
         this._inventoryitemRepository.create(item, callback);
@@ -116,7 +125,17 @@ class InventoryItemBusiness implements IInventoryItemBusiness {
         this._inventoryitemRepository.findById(_id, callback);
     }
 
+    getQuantity(_id: string, callback: (error: any, result: any) => void) {
+        this._transactionDetailRepository.getQuantity(_id, (error, result) => {
+            callback(null, result);
+        });
+    }
+
+    /**
+     * Search inventoryItems by itemCode or itemName
+     */
     search(_keyword: string, callback: (error: any, result: any) => void) {
+        console.log('SEARCH--------');
         if (!!_keyword) {
             let _options = {};
             _options['cond'] = {};
@@ -127,10 +146,62 @@ class InventoryItemBusiness implements IInventoryItemBusiness {
                 ]
             };
             _options['cond']['type'] = 'search';
+            _options['fields'] = [
+                '_id',
+                'inventoryItemId',
+                'inventoryItemCode',
+                'inventoryItemName',
+                'inventoryItemConversionUnit',
+                'inventoryItemBaseUnit'
+            ];
 
-            this._inventoryitemRepository.find(callback, _options);
+            this._inventoryitemRepository.find((error, result) => {
+                let inventoryItems = result;
+                //let inventoryItemId = inventoryItems[0]['inventoryItemId'];
+                let transactionDetailBusiness: TransactionDetailBusiness = new TransactionDetailBusiness();
+                let computedInventoryItems = [];
+                this.computeQuantity(this, inventoryItems, computedInventoryItems, (result) => {
+                    callback(null, result);
+                })
+
+            }, _options);
         } else {
             this._inventoryitemRepository.retrieve(callback, {});
+        }
+    }
+
+    computeQuantity(base: any, orginalInventoryItems: any[], computedInventoryItems: any[], nextCallback) {
+        if (orginalInventoryItems.length > 0) {
+            let currentInventoryItem = orginalInventoryItems.pop();
+            let inventoryItemId = currentInventoryItem['inventoryItemId'];
+
+            let transactionDetailBusiness: TransactionDetailBusiness = new TransactionDetailBusiness();
+            transactionDetailBusiness.findByInventoryItemId(inventoryItemId, (error, result) => {
+                let instock = 0;
+                for (let i = 0; i < result.length; i++) {
+                    let realQuantity = +result[i]['realQuantity'];
+                    switch (+result[i]['transactionType']) {
+                        case 1:
+                            realQuantity *= 1;
+                            break;
+                        case 2:
+                            realQuantity *= -1;
+                            break;
+                        case 3:
+                            realQuantity *= 0;
+                            break;
+                        default:
+                            realQuantity *= 0;
+                    }
+                    instock += realQuantity;
+                }
+                currentInventoryItem['instock'] = instock;
+                computedInventoryItems.push(currentInventoryItem);
+                base.computeQuantity(base, orginalInventoryItems, computedInventoryItems, nextCallback);
+            })
+        } else {
+            console.log(computedInventoryItems)
+            nextCallback(computedInventoryItems);
         }
     }
 

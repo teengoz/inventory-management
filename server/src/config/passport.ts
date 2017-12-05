@@ -15,7 +15,7 @@ passport.use(new LocalStrategy({
 
             if (!user) {
                 return done(null, false, {
-                    errors: 'User not found'
+                    errors: 'Đăng nhập không thành công'
                 });
             }
 
@@ -23,7 +23,7 @@ passport.use(new LocalStrategy({
 
             if (!_user.validPassword(password)) {
                 return done(null, false, {
-                    errors: 'Password is wrong'
+                    errors: 'Đăng nhập không thành công'
                 });
             }
 

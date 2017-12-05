@@ -47,6 +47,7 @@ export class OrderDetailTableComponent implements OnInit, DoCheck, AfterViewInit
     // Supporting Variables
     checkedBoxs = 0;
     isCheckedAll = false;
+    _debugHide = false;
 
     //Resize table columns
     @ViewChild('table') private table: ElementRef;
@@ -85,10 +86,10 @@ export class OrderDetailTableComponent implements OnInit, DoCheck, AfterViewInit
                 this.colWidth[i] = thList[i].clientWidth;
             }
         }
-        console.log("Real fullwidth: ", this.table.nativeElement.parentNode.clientWidth);
-        console.log("Fullwidth: ", fullWidth);
-        console.log("Table width: ", this.getTableWidth());
-        console.log("Col width: ", this.colWidth);
+        // console.log("Real fullwidth: ", this.table.nativeElement.parentNode.clientWidth);
+        // console.log("Fullwidth: ", fullWidth);
+        // console.log("Table width: ", this.getTableWidth());
+        // console.log("Col width: ", this.colWidth);
     }
 
     getTableWidth() {
@@ -111,10 +112,7 @@ export class OrderDetailTableComponent implements OnInit, DoCheck, AfterViewInit
     }
 
     resize(left, right, offset) {
-        console.log('Resize: ', left);
-        console.log('Check fixed: ', this.fixedCol.indexOf(+left));
         if (left > -1 && this.fixedCol.indexOf(+left) < 0) {
-            console.log('Resize True');
             this.colWidth[left] = ((this.beforeWidth + offset) < this.minWidth) ? this.minWidth : this.beforeWidth + offset;
         }
     }
@@ -355,6 +353,7 @@ export class OrderDetailTableComponent implements OnInit, DoCheck, AfterViewInit
         } else {
             this.data = [];
         }
+        console.log('reset');
     }
 
     private removeLocalFields(data, fields) {
@@ -390,8 +389,8 @@ export class OrderDetailTableComponent implements OnInit, DoCheck, AfterViewInit
     }
 
     deleteItems(objectList: any[]) {
-        objectList.forEach((elm, index) => {
-            this.delete(elm);
-        });
+        for (let i = 0; i < objectList.length; i++) {
+            this.delete(objectList[i]);
+        }
     }
 }

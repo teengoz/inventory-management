@@ -2,6 +2,7 @@ import TransactionDetailRepository = require("../repository/TransactionDetailRep
 import ITransactionDetailBusiness = require("./interfaces/ITransactionDetailBusiness");
 import ITransactionDetail = require("../model/interfaces/ITransactionDetail");
 import TransactionDetail = require("../model/TransactionDetail");
+import mongoose = require("mongoose");
 
 
 class TransactionDetailBusiness implements ITransactionDetailBusiness {
@@ -44,7 +45,7 @@ class TransactionDetailBusiness implements ITransactionDetailBusiness {
         this._transactionDetailRepository.create(item, callback);
     }
 
-    insertDetail(detail, callback: (error: any, result: any) => void) {
+    insert(detail, callback: (error: any, result: any) => void) {
         this._transactionDetailRepository.create(detail, callback);
     }
 
@@ -53,8 +54,8 @@ class TransactionDetailBusiness implements ITransactionDetailBusiness {
         return false;
     }
 
-    update(_id: string, item, callback: (error: any, result: any) => void) {
-
+    update(_id, item, callback: (error: any, result: any) => void) {
+        this._transactionDetailRepository.update(_id, item, callback);
     };
 
     updateItem(req, callback: (error: any, result: any) => void) {
@@ -108,10 +109,48 @@ class TransactionDetailBusiness implements ITransactionDetailBusiness {
         this._transactionDetailRepository.delete(_id, callback);
     }
 
+    deteleByTransactionId(_transactionId, callback: (error: any) => void) {
+        this._transactionDetailRepository.removeByTransactionId(_transactionId, callback);
+    }
+
+    deleteUnupdatedTransactionDetail(transactionId, updatedTransactionDetailIds, callback: (error: any) => void) {
+        this._transactionDetailRepository.removeUnupdatedTransactionDetail(
+            transactionId,
+            updatedTransactionDetailIds,
+            callback
+        )
+    }
+
     retrieve(callback: (error: any, result: any) => void, options?: any) {
         let _options = options || {};
 
         this._transactionDetailRepository.retrieve(callback, _options);
+    }
+
+    findByTransactionId(_transactionId, callback: (error: any, result: any) => void) {
+        let _options = {};
+        _options['cond'] = {};
+        _options['cond']['filter'] = { 'transaction._id': new mongoose.Types.ObjectId(_transactionId) };
+        _options['cond']['type'] = '=';
+
+        this._transactionDetailRepository.find(callback, _options);
+    }
+
+    findByInventoryItemId(_inventoryItemId: string, callback: (error: any, result: any) => void) {
+        let _options = {};
+        _options['cond'] = {};
+        _options['cond']['filter'] = { 
+            $and: [
+                { 'inventoryItem.inventoryItemId': _inventoryItemId },
+                { "transaction.isRecorded": true }
+            ]
+        };
+        _options['cond']['type'] = '=';
+        _options['fields'] = [
+            'transactionType', 'realQuantity'
+        ]
+
+        this._transactionDetailRepository.find(callback, _options);
     }
 
     query(callback: (error: any, result: any) => void, options?: any) {
@@ -123,24 +162,6 @@ class TransactionDetailBusiness implements ITransactionDetailBusiness {
     findById(_id: string, callback: (error: any, result: ITransactionDetail) => void) {
         this._transactionDetailRepository.findById(_id, callback);
     }
-
-    // search(_keyword: string, callback: (error: any, result: any) => void) {
-    //     if (!!_keyword) {
-    //         let _options = {};
-    //         _options['cond'] = {};
-    //         _options['cond']['filter'] = {
-    //             $or: [
-    //                 { 'inventoryItemCode': new RegExp(_keyword, 'i') },
-    //                 { 'inventoryItemName': new RegExp(_keyword, 'i') }
-    //             ]
-    //         };
-    //         _options['cond']['type'] = 'search';
-    //
-    //         this._transactionDetailRepository.find(callback, _options);
-    //     } else {
-    //         this._transactionDetailRepository.retrieve(callback, {});
-    //     }
-    // }
 
     findCode(_code: string, callback: (error: any, result: any) => void) {
         let _options = {};

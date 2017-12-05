@@ -1,0 +1,25 @@
+.table>thead>tr {
+    background-color: #eaeaea;
+    border-top: 1px solid #dddddd;
+}
+
+.table>thead>tr>th {
+    border: 1px solid #dddddd !important;
+    text-align: center;
+}
+
+th.number {
+    text-align: right;
+}
+
+.table>tbody>tr>td {
+    border: 1px solid #dddddd;
+}
+
+.table>tbody>tr>td.number {
+    text-align: right;
+}
+
+.table>tbody>tr>td:first-child {
+    text-align: center;
+}

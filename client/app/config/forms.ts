@@ -334,27 +334,27 @@ const FORMS = {
                 required: true,
                 order: 4
             }),
-            new TextboxInput({
-                key: 'inventoryItemCostPrice',
-                label: 'Giá nhập',
-                type: 'text',
-                required: true,
-                order: 5
-            }),
-            new TextboxInput({
-                key: 'inventoryItemMinQuantity',
-                label: 'Tồn tối thiểu',
-                type: 'text',
-                required: true,
-                order: 6
-            }),
-            new TextboxInput({
-                key: 'inventoryItemMaxQuantity',
-                label: 'Tồn tối đa',
-                type: 'text',
-                required: true,
-                order: 7
-            }),
+            // new TextboxInput({
+            //     key: 'inventoryItemCostPrice',
+            //     label: 'Giá nhập',
+            //     type: 'text',
+            //     required: true,
+            //     order: 5
+            // }),
+            // new TextboxInput({
+            //     key: 'inventoryItemMinQuantity',
+            //     label: 'Tồn tối thiểu',
+            //     type: 'text',
+            //     required: true,
+            //     order: 6
+            // }),
+            // new TextboxInput({
+            //     key: 'inventoryItemMaxQuantity',
+            //     label: 'Tồn tối đa',
+            //     type: 'text',
+            //     required: true,
+            //     order: 7
+            // }),
         ].sort((a, b) => a.order - b.order)
     },
     'itemBasicInfoEdit': {

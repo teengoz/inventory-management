@@ -15,6 +15,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class ManagementComponent implements OnInit {
     @ViewChild('navbarToggler') navbarToggler: ElementRef;
 
+    userName = "userName";
+
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService) {
@@ -31,6 +33,8 @@ export class ManagementComponent implements OnInit {
                 if (!result) {
                     this.router.navigate(['/']);
                 }
+                let localUser = JSON.parse(localStorage.getItem('currentUser'));
+                this.userName = localUser['username'];
             })
         } else {
             this.router.navigate(['/']);

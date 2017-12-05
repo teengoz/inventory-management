@@ -170,6 +170,7 @@ export class IMCustomDropdownComponent implements OnInit, AfterViewChecked {
       this.query(this.termInput, (result) => {
         if (result.length > 0) {
           this.optionsArray = result;
+          console.log(this.optionsArray);
           this.isHideOptions = false;
         } else {
           this.isHideOptions = true;

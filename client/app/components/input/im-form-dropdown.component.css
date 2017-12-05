@@ -2,14 +2,16 @@
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
     position: absolute;
     background: #FFF;
-    /*width: 100%;*/
     z-index: 99;
-    transition: all 0.3s;
-    width: 100%;
+    transition: all 0.3s;;
     min-width: 200px;
     max-height: 200px;
     overflow: auto;
     margin-bottom: 100px;
+}
+
+.dropdown-input {
+    position: relative;
 }
 
 .options-container.hide-options {
@@ -31,7 +33,7 @@
 .dropdown-container {
     display: block;
     width: 100%;
-    position: relative;
+    position: static;
     /*box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);*/
 }
 

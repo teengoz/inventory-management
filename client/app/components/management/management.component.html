@@ -18,19 +18,20 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Kho <b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a (click)="collapseNav()" routerLink="transaction" routerLinkActive="active">Nhập, xuất, chuyển kho</a></li>
-								<li><a (click)="collapseNav()" routerLink="transaction/create" routerLinkActive="active">Lập phiếu</a></li>
-								<li class="divider"></li>
+								<li><a (click)="collapseNav()" routerLink="transactions" routerLinkActive="active">Nhập, xuất, chuyển kho</a></li>
+								<li><a (click)="collapseNav()" routerLink="transactions/create" routerLinkActive="active">Lập phiếu</a></li>
+								<!-- <li class="divider"></li>
 								<li class="disabled"><a>Kiểm kê</a></li>
-								<li class="disabled"><a>Tính giá xuất kho</a></li>
+								<li class="disabled"><a>Tính giá xuất kho</a></li> -->
 							</ul>
 						</li>
-						<li class="dropdown disabled">
+						<!-- <li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Thủ kho <b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu">
-								<!---->
+								<li><a (click)="collapseNav()" routerLink="transaction-requests" routerLinkActive="active">Đề nghị nhập, xuất, chuyển</a></li>
+								<li class="disabled"><a (click)="collapseNav()" routerLink="transactions/create" routerLinkActive="active">Biên bản kiểm kê</a></li>
 							</ul>
-						</li>
+						</li> -->
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Danh mục <b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu">
@@ -42,31 +43,31 @@
 								<li><a (click)="collapseNav()" routerLink="stakeholder-types" routerLinkActive="active">Nhóm đối tác</a></li>
 							</ul>
 						</li>
-						<li class="dropdown">
+						<!-- <li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tài khoản nhân viên <b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu">
-								<!--<li><a (click)="collapseNav()" routerLink="users" routerLinkActive="active">Danh sách tài khoản</a></li>
-								<li class="disabled"><a>Quản lý nhóm quyền</a></li>-->
+								<li><a (click)="collapseNav()" routerLink="users" routerLinkActive="active">Danh sách tài khoản</a></li>
+								<li class="disabled"><a>Quản lý nhóm quyền</a></li>
 								<li class="disabled"><a>Danh sách tài khoản</a></li>
 								<li class="disabled"><a>Quản lý nhóm quyền</a></li>
 							</ul>
-						</li>
-						<li class="dropdown">
+						</li> -->
+						<!-- <li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Hệ thống <b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a (click)="collapseNav()" routerLink="info" routerLinkActive="active">Thông tin công ty</a></li>
-								<li><a (click)="collapseNav()" routerLink="setting" routerLinkActive="active">Thiết lập</a></li>
-								<li class="disabled"><a>Sao lưu - phục hồi</a></li>
-								<li class="disabled"><a>Nhập ký sử dụng</a></li>
-							</ul>
-						</li>
+							<ul class="dropdown-menu" role="menu"> -->
+								<!-- <li><a (click)="collapseNav()" routerLink="info" routerLinkActive="active">Thông tin công ty</a></li> -->
+								<!-- <li><a (click)="collapseNav()" routerLink="setting" routerLinkActive="active">Thiết lập</a></li> -->
+								<!-- <li class="disabled"><a>Sao lưu - phục hồi</a></li>
+								<li class="disabled"><a>Nhập ký sử dụng</a></li> -->
+							<!-- </ul> -->
+						<!-- </li> -->
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><button type="button" class="btn btn-warning navbar-btn">Thông báo <span class="badge badge-danger">3</span></button></li>
+						<!-- <li><button type="button" class="btn btn-warning navbar-btn">Thông báo <span class="badge badge-danger">3</span></button></li> -->
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle user-control" data-toggle="dropdown">Chào, Quang <b class="caret"></b></a>
+							<a href="#" class="dropdown-toggle user-control" data-toggle="dropdown">Chào, {{ userName }} <b class="caret"></b></a>
 							<ul class="dropdown-menu" role="menu">
-								<li><a href="#">Đổi mật khẩu</a></li>
+								<!-- <li><a (click)="collapseNav()" routerLink="password" routerLinkActive="active">Đổi mật khẩu</a></li> -->
 								<li><a (click)=logout()>Đăng xuất</a></li>
 							</ul>
 						</li>

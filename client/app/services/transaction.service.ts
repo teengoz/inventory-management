@@ -8,7 +8,7 @@ import { Transaction } from '../models/transaction';
 
 @Injectable()
 export class TransactionService {
-    private TransactionsUrl = '/api/transactions';
+    private transactionsUrl = '/api/transactions';
     private token: string;
 
     constructor(
@@ -21,7 +21,7 @@ export class TransactionService {
 
     get(page?: number, limit?: number): Promise<Transaction[]> {
         let urlQueryParam = [];
-        let url = this.TransactionsUrl;
+        let url = this.transactionsUrl;
 
         if (page) {
             urlQueryParam.push({
@@ -50,7 +50,7 @@ export class TransactionService {
 
     query(parameters: any, page?: number, limit?: number): Promise<Transaction[]> {
         let urlQueryParam = [];
-        let url = this.TransactionsUrl + '/query';
+        let url = this.transactionsUrl + '/query';
 
         if (page) {
             urlQueryParam.push({
@@ -78,8 +78,15 @@ export class TransactionService {
             .catch(this.handleError);
     }
 
+    getById(id: string) {
+        return this.http.get(this.transactionsUrl + '/' + id, { headers: this.genHeader.return() })
+            .toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
     findCode(code): Promise<any> {
-        let url = this.TransactionsUrl + '/code';
+        let url = this.transactionsUrl + '/code';
         if (code) {
             url += '/' + code;
         }
@@ -92,7 +99,7 @@ export class TransactionService {
     }
 
     search(keyword): Promise<any> {
-        let url = this.TransactionsUrl + '/search';
+        let url = this.transactionsUrl + '/search';
         if (keyword) {
             url += '/' + keyword;
         }
@@ -105,12 +112,21 @@ export class TransactionService {
     }
 
     hint(keyword?: string): Promise<Transaction[]> {
-        let _url = this.TransactionsUrl + '/hint/';
+        let _url = this.transactionsUrl + '/hint/';
         let _keyword = keyword || '';
         _url += _keyword;
 
         return this.http
             .get(_url, { headers: this.genHeader.return() })
+            .toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
+    record(id: String, record: boolean): Promise<Transaction> {
+        let url = `${this.transactionsUrl}/${id}/record/${record}`;
+        return this.http
+            .put(url, {} ,{ headers: this.genHeader.return() })
             .toPromise()
             .then(response => response.json())
             .catch(this.handleError);
@@ -124,7 +140,7 @@ export class TransactionService {
     }
 
     delete(item: Transaction): Promise<boolean> {
-        return this.http.delete(this.TransactionsUrl + '/' + item.transactionId, { headers: this.genHeader.return() })
+        return this.http.delete(this.transactionsUrl + '/' + item.transactionId, { headers: this.genHeader.return() })
             .toPromise()
             .then(response => response.json().success as boolean)
             .catch(this.handleError);
@@ -132,14 +148,14 @@ export class TransactionService {
 
     private post(item: Transaction): Promise<any> {
         return this.http
-            .post(this.TransactionsUrl, JSON.stringify(item), { headers: this.genHeader.return() })
+            .post(this.transactionsUrl, JSON.stringify(item), { headers: this.genHeader.return() })
             .toPromise()
             .then(response => response.json())
             .catch(this.handleError);
     }
 
     private put(item: Transaction) {
-        let url = `${this.TransactionsUrl}/${item['basic']['transactionId']}`;
+        let url = `${this.transactionsUrl}/${item['basic']['transactionId']}`;
 
         return this.http
             .put(url, JSON.stringify(item), { headers: this.genHeader.return() })

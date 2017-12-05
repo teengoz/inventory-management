@@ -51,6 +51,10 @@ class StockBusiness implements IStockBusiness {
         this._stockRepository.findById(_id, callback);
     }
 
+    getByIds(_ids: string[], callback: (error: any, result: IStock[]) => void) {
+        this._stockRepository.getByIds(_ids, callback);
+    }
+
     search(_keyword: string, callback: (error: any, result: any) => void) {
         if (!!_keyword) {
             let _options = {};

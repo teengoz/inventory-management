@@ -1,0 +1,15 @@
+<div class="row" style="margin-bottom: 10px">
+    <im-custom-dropdown
+        [options]="_options"
+        [queryService]="queryServiceClass"
+        (enterValueEvent)="addItemFromDropdown($event)">
+    </im-custom-dropdown>
+</div>
+<div class="row">
+    <im-transaction-detail-table
+        #imTransactionDetailTable
+        [(data)]="data"
+        [typeKey]="typeKey"
+    >
+    </im-transaction-detail-table>
+</div>

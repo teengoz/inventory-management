@@ -8,7 +8,7 @@ class InventoryItemRoutes {
     constructor() {
         this._inventoryItemController = new InventoryItemController();
     }
-    
+
     get routes() {
         var controller = this._inventoryItemController;
 
@@ -19,6 +19,7 @@ class InventoryItemRoutes {
         router.get("/search", controller.search);
         router.get("/search/:_keyword", controller.search);
         router.get("/:_id", controller.findById);
+        router.get("/:_id/quantity", controller.getQuantity);
         router.get("/code/:_code", controller.findCode);
         router.delete("/:_id", controller.delete);
 

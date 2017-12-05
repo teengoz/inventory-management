@@ -77,9 +77,14 @@ class TransactionSchema {
                     },
                     'fields': [
                         'price',
-                        'quantity'
+                        'quantity',
+                        'stock',
+                        'secondStock',
+                        'unit',
+                        'inventoryItem',
+                        'lotNo'
                     ],
-                    'as': 'transactionDetails'
+                    'as': 'transactionDetailData'
                 }
             ]
         }

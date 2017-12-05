@@ -91,6 +91,20 @@ export class ItemService {
             .catch(this.handleError);
     }
 
+    getById(id: string) {
+        return this.http.get(this.ItemsUrl + '/' + id, { headers: this.genHeader.return() })
+            .toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
+    getQuantity(id: string) {
+        return this.http.get(this.ItemsUrl + '/' + id + '/quantity/', { headers: this.genHeader.return() })
+            .toPromise()
+            .then(response => response.json())
+            .catch(this.handleError);
+    }
+
     search(keyword): Promise<any> {
         let url = this.ItemsUrl + '/search';
         if (keyword) {

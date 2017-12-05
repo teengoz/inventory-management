@@ -7,7 +7,7 @@ import mongoose = require("mongoose");
 
 class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T> {
 
-    private _model: mongoose.Model<T>;
+    _model: mongoose.Model<T>;
     private typeArray = ['$in', '=', 'search'];
 
     constructor(schemaModel: mongoose.Model<T>) {
@@ -20,6 +20,7 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
     }
 
     update(_id: mongoose.Types.ObjectId, item: T, callback: (error: any, result: any) => void) {
+        mongoose.set('debug', true);
         let _item = item;
 
         if (_item['parent'] && (_id.toString() == _item['parent'].toString())) {
@@ -40,8 +41,11 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
         let _page = options['page'] || 1;
         let _limit = (+options['limit'] >= 0) ? +options['limit'] : Constants.PER_PAGE;
         let _fields = options['fields'] || [];
+        let _cond = options['cond'] || {};
+        let _sort = _cond['sort'] || {};
 
         let _aggLookup = this.generateLookup();
+        let _aggSort = (Object.keys(_sort).length) ? [{ $sort: _sort }] : [];
         let _aggLimit = (_limit > 0) ? [{ $limit: +_limit }] : [];
         let _aggSkip = [{ $skip: (_page - 1) * _limit }];
         let tempProject = this.generateProject(_fields);
@@ -50,6 +54,7 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
         this._model
             .aggregate([
                 ..._aggLookup,
+                ..._aggSort,
                 ..._aggSkip,
                 ..._aggLimit,
                 ..._aggProject
@@ -113,6 +118,31 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
             });
     }
 
+    getByIds(ids: string[], callback: (error: any, result: any) => void) {
+        mongoose.set('debug', true);
+
+        let idObjects = [];
+        for (let i = 0; i < ids.length; i++) {
+            idObjects.push(this.toObjectId(ids[i]));
+        }
+
+        let _aggLookup = this.generateLookup();
+        let _aggFilter = [{ $match: { '_id': { $in: idObjects } } }];
+        let tempProject = this.generateProject();
+        let _aggProject = (Object.keys(tempProject).length) ? [{ $project: tempProject }] : [];
+
+        this._model
+            .aggregate([
+                ..._aggLookup,
+                ..._aggFilter,
+                ..._aggProject
+            ])
+            .exec((error, result) => {
+                let item: T = (result[0]) ? result[0] : <T>{};
+                callback(error, item);
+            });
+    }
+
     meta(callback: (error: any, result) => void, options?: any) {
         //mongoose.set('debug', true);
         let _cond = options['cond'] || {};
@@ -158,7 +188,7 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
             });
     }
 
-    private generateLookup() {
+    generateLookup() {
         let _lookup = [];
         this._model.schema['options']['refs'].forEach((elm, idx) => {
             let _temp = {
@@ -174,7 +204,7 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
         return _lookup;
     }
 
-    private generateProject(selectFields?: string[]) {
+    generateProject(selectFields?: string[]) {
         let _project = {};
         let hiddenFields = this._model.schema['options']['hiddenFields'];
         let localFields = [];
@@ -209,7 +239,7 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
         return _project;
     }
 
-    private toObjectId(_id: string): mongoose.Types.ObjectId {
+    toObjectId(_id: string): mongoose.Types.ObjectId {
         return new mongoose.Types.ObjectId(_id);
     }
 }

@@ -7,45 +7,66 @@ import ITransaction = require("../model/interfaces/ITransaction");
 import ITransactionDetail = require("../model/interfaces/ITransactionDetail");
 import Transaction = require("../model/Transaction");
 
+const TRANSFER_TRANSACTION = 3;
+const INWARD_TRANSACTION = 1;
+const OUTWARD_TRANSACTION = 2;
+enum TRANSACTION_TYPE {
+    TRANSFER_TRANSACTION, INWARD_TRANSACTION, OUTWARD_TRANSACTION
+}
 
 class TransactionBusiness implements ITransactionBusiness {
     private _transactionRepository: TransactionRepository;
+    private _transactionDetailRepository: TransactionDetailBusiness;
+    private _transactionType: TRANSACTION_TYPE;
 
     constructor() {
         this._transactionRepository = new TransactionRepository();
+        this._transactionDetailRepository = new TransactionDetailBusiness();
     }
 
     create(req, callback: (error: any, result: any) => void) {
+        // Basic data
         let body = req.body;
         let basic = req.body['basic'];
+
+        // Detail data
         let plainDetailData = req.body['detail'];
         let item = {};
         let transactionDetails: ITransactionDetail[];
 
+        // User Id for createdBy
         let userId = req['payload']['_id'];
         item['createdBy'] = userId;
 
-        item['stakeholder'] = basic['stakeholder'];
-        item['transactionType'] = basic['transactionType'];
+        // Generate auto id
         let newId = new Date().getTime().toString();
+
+        // Assign basic data
+        this._transactionType = item['transactionType'] = basic['transactionType'];
         item['transactionNo'] = newId;
         item['transactionDescription'] = basic['description'];
-        item['transactionTime'] = new Date(+basic['time'] * 1000);
+        let time = (+basic['time'] == 0) ? new Date() : new Date(+basic['time'] * 1000);
+        item['transactionTime'] = time;
         item['isRecorded'] = basic['isRecorded'] || false;
+        if (basic['transactionType'] != TRANSFER_TRANSACTION) {
+            item['stakeholder'] = basic['stakeholder'];
+        }
 
+        // Initialize detail rows
         let detailRows = []
 
+        //Valid plain data
         this.validDetailData(this, plainDetailData, detailRows, this.validDetailData, () => {
             console.log('Error validDetailData');
             console.log('error');
-        }, (data) => {
+        }, (validData) => {
             // console.log('BASIC');
             // console.log(item);
             // console.log('insertTransaction');
             // console.log(data);
-            this.insertTransaction(item, data, callback);
+            this.insertTransaction(item, validData, callback);
         })
-        //callback('error heheh', null);
+        //callback('error', null);
         //this._transactionRepository.create(item, callback);
     }
 
@@ -53,22 +74,30 @@ class TransactionBusiness implements ITransactionBusiness {
         this._transactionRepository.create(item, (error, result) => {
             let createdBy = result['createdBy'];
             let transactionId = result['transactionId'];
+            let transactionType = result['transactionType']
+
+            // Values in exist in all of item in transactionDetailData
             let commonData = {
-                createdBy, transactionId
+                createdBy, transactionId, transactionType
             }
             this.insertTransactionDetail(commonData, data, callback);
         });
     }
 
+    /**
+     * commonData = Values in exist in all of item in transactionDetailData
+     * data = Array of transactionDetail
+     */
     insertTransactionDetail(commonData, data, callback) {
         let transactionDetailBusiness = new TransactionDetailBusiness();
         let base = this;
 
         if (data.length > 0) {
             let _detail = data.pop();
-            _detail['createdBy'] = commonData['createdBy'];
+            _detail['createdBy'] = commonData['user'];
             _detail['transaction'] = commonData['transactionId'];
-            transactionDetailBusiness.insertDetail(_detail, (error, result) => {
+            _detail['transactionType'] = commonData['transactionType'];
+            transactionDetailBusiness.insert(_detail, (error, result) => {
                 base.insertTransactionDetail(commonData, data, callback);
             });
         } else {
@@ -76,27 +105,223 @@ class TransactionBusiness implements ITransactionBusiness {
         }
     }
 
+    updateByRequestData(req, callback: (error: any, result: any) => void) {
+        // Basic data
+        let body = req.body;
+        let basic = req.body['basic'];
+        let _id: string = req.params._id;
+
+        // Detail data
+        let plainDetailData = req.body['detail'];
+        let item = {};
+        let transactionDetails: ITransactionDetail[];
+
+        // Transaction Id
+        item['transactionId'] = _id;
+
+        // User Id for updatedBy
+        let userId = req['payload']['_id'];
+        item['updatedBy'] = userId;
+        this._transactionType = basic['transactionType'];
+        item['transactionDescription'] = basic['description'];
+        let time = (+basic['time'] == 0) ? new Date().getTime() : +basic['time'];
+        item['transactionTime'] = new Date(time * 1000);
+        item['isRecorded'] = basic['isRecorded'] || false;
+        if (basic['transactionType'] != TRANSFER_TRANSACTION) {
+            item['stakeholder'] = basic['stakeholder'];
+        }
+
+        // Initialize detail rows
+        let detailRows = []
+
+        //Valid plain data
+        this.validDetailData(this, plainDetailData, detailRows, this.validDetailData, () => {
+            console.log('Error validDetailData');
+            console.log('error');
+        }, (validData) => {
+            // Use method for save detail data
+            this.updateTransaction(item, validData, callback);
+        })
+    }
+
+    updateTransaction(item, validData, callback) {
+        console.log('--------------updateTransaction--------------')
+        this._transactionRepository.update(item['transactionId'], item, (error, result) => {
+            if (error) {
+                callback(error, null);
+                return;
+            }
+            let user = item['updatedBy'];
+            let transactionId = item['transactionId'];
+            let transactionType = result['transactionType']
+            let updateTransactionDetailIds = [];
+
+            // Values in exist in all of items in transactionDetailData
+            let commonData = {
+                user, transactionId, transactionType, updateTransactionDetailIds
+            }
+
+            this.saveTransactionDetail(commonData, validData, callback);
+        })
+    }
+
+    saveTransactionDetail(commonData, data, callback) {
+        let transactionDetailBusiness = new TransactionDetailBusiness();
+        let base = this;
+
+        if (data.length > 0) {
+            let _detail = data.pop();
+            if (_detail['transactionDetailId']) {
+                _detail['updatedBy'] = commonData['user'];
+                _detail['transaction'] = commonData['transactionId'];
+                _detail['transactionType'] = commonData['transactionType'];
+                transactionDetailBusiness.update(_detail['transactionDetailId'], _detail, (error, result) => {
+                    commonData['updateTransactionDetailIds'].push(_detail['transactionDetailId']);
+                    base.saveTransactionDetail(commonData, data, callback);
+                });
+            } else {
+                _detail['createdBy'] = commonData['user'];
+                _detail['transaction'] = commonData['transactionId'];
+                transactionDetailBusiness.insert(_detail, (error, result) => {
+                    base.saveTransactionDetail(commonData, data, callback);
+                });
+            }
+        } else {
+            if (commonData['updateTransactionDetailIds']) {
+                console.log('--------------deleteUnupdatedTransactionDetail--------------')
+                console.log(commonData['updateTransactionDetailIds']);
+                transactionDetailBusiness.deleteUnupdatedTransactionDetail(
+                    commonData['transactionId'],
+                    commonData['updateTransactionDetailIds'],
+                    (error) => {
+                        callback(error, 'DONE');
+                    }
+                )
+            } else {
+                callback(null, 'DONE');
+            }
+        }
+    }
+
+    record(_id, _record, callback: (error: any, result: any) => void) {
+        this._transactionRepository.findById(_id, (err, res) => {
+            if (err) {
+                callback(err, res);
+            }
+            else {
+                let placeholderTransaction: any = {};
+                placeholderTransaction.isRecorded = _record;
+                //console.log(res);
+                this._transactionRepository.update(res._id, placeholderTransaction, callback);
+                //callback(null, "DONE");
+            }
+        });
+    }
+
+    update(_id: string, item, callback: (error: any, result: any) => void) {
+
+    };
+
+    delete(_id: string, callback: (error: any) => void) {
+        this._transactionRepository.delete(_id, (error, result) => {
+            let transactionDetailBusiness = new TransactionDetailBusiness();
+            transactionDetailBusiness.deteleByTransactionId(_id, callback);
+        });
+    }
+
+    retrieve(callback: (error: any, result: any) => void, options?: any) {
+        let _options = options || {};
+        _options['cond'] = {};
+        _options['cond']['sort'] = {
+            'transactionTime': -1
+        };
+
+        console.log('RETRIVE--------')
+        console.log(_options);
+
+        this._transactionRepository.retrieve(callback, _options);
+    }
+
+    query(callback: (error: any, result: any) => void, options?: any) {
+        let _options = options || {};
+
+        this._transactionRepository.find(callback, _options);
+    }
+
+    findById(_id: string, callback: (error: any, result: ITransaction) => void) {
+        this._transactionRepository.findById(_id, (error, result) => {
+            let transaction = result;
+            let transactionId = result.transactionId;
+            let transactionDetailBusiness = new TransactionDetailBusiness();
+            transactionDetailBusiness.findByTransactionId(transactionId, (error, result) => {
+                transaction['transactionDetailData'] = result;
+                callback(null, transaction);
+            })
+        });
+    }
+
+    meta(callback: (error: any, result: any) => void, options?: any) {
+        let _options = options || {};
+
+        this._transactionRepository.meta(callback, _options);
+    }
+
+    /**
+     * base = this
+     * data = plain data
+     * validData = the data is valid
+     * loopCallback = execute validation the next position in plainDetailData
+     * failCallback = execute when there is a item which is invalid
+     * nextCallback = execute when all of item in plainData are valid
+     */
     validDetailData(base, data: any[], validData: any[], loopCallback, failCallback, nextCallback) {
         if (data.length > 0) {
             let currentDetail = data.pop();
+            if (!base.isValidStock(currentDetail)) {
+                failCallback();
+                return;
+            }
             let inventoryItemBusiness = new InventoryItemBusiness();
             inventoryItemBusiness.findById(currentDetail['item'], (error, result) => {
                 if (error) {
                     failCallback();
                 } else {
-                    let stockBusiness = new StockBusiness();
                     let currentInventoryItem = result;
-                    stockBusiness.findById(currentDetail['stock'], (error, result) => {
-                        if (error) {
+
+                    // Check stock data for valid information
+                    let stockBusiness = new StockBusiness();
+                    let stocks = [];
+                    if (currentDetail['stock']) {
+                        stocks.push(currentDetail['stock']);
+                    }
+
+                    if (currentDetail['secondStock']) {
+                        stocks.push(currentDetail['secondStock']);
+                    }
+
+                    /**
+                     * check existence of stocks
+                     * assign value for transactionDetail
+                     * add transactionDetail to validData
+                     * execute loopCallback
+                     */
+                    stockBusiness.getByIds(stocks, (error, result) => {
+                        if (error || result.length < 0) {
                             failCallback();
                         } else {
-                            let currentStock = result;
                             let inventoryItemId = currentInventoryItem.inventoryItemId;
                             let inventoryItemBaseUnit = currentInventoryItem.inventoryItemBaseUnit;
                             let inventoryItemConversionUnit = JSON.parse(currentInventoryItem.inventoryItemConversionUnit);
+
                             let _detail = {};
+                            if (currentDetail['id']) {
+                                _detail['transactionDetailId'] = currentDetail['id'];
+                            }
                             _detail['inventoryItem'] = inventoryItemId;
-                            _detail['stock'] = currentStock.stockId;
+                            _detail['stock'] = currentDetail['stock'];
+                            if (currentDetail['secondStock']) {
+                                _detail['secondStock'] = currentDetail['secondStock'];
+                            }
                             let indexOfUnit = base.isValidUnit(currentDetail['unit'], inventoryItemConversionUnit);
                             let rate = 1;
                             if ((<string>currentDetail['unit']).toLowerCase() != inventoryItemBaseUnit.toLowerCase()
@@ -113,6 +338,7 @@ class TransactionBusiness implements ITransactionBusiness {
                             _detail['baseUnit'] = inventoryItemBaseUnit;
                             _detail['conversionRate'] = rate;
                             _detail['realQuantity'] = rate * _detail['quantity'];
+                            _detail['lotNo'] = currentDetail['lotNo'];
                             validData.push(_detail);
                             loopCallback(base, data, validData, loopCallback, failCallback, nextCallback);
                         }
@@ -125,6 +351,17 @@ class TransactionBusiness implements ITransactionBusiness {
         }
     }
 
+    private isValidStock(detail) {
+        if (!detail['stock']) {
+            return false;
+        } else if (this._transactionType == TRANSFER_TRANSACTION && !detail['secondStock']) {
+            return false;
+        } else if (detail['secondStock'] && detail['secondStock'] == detail['stock']) {
+            return false;
+        }
+        return true;
+    }
+
     private isValidUnit(unit: string, unitList: any[]): number {
         if (unitList && unitList.length > 0) {
             for (let i = 0; i < unitList.length; i++) {
@@ -134,110 +371,6 @@ class TransactionBusiness implements ITransactionBusiness {
             }
         }
         return -1;
-    }
-
-    update(_id: string, item, callback: (error: any, result: any) => void) {
-
-    };
-
-    updateItem(req, callback: (error: any, result: any) => void) {
-        var _id: string = req.params._id;
-
-        this._transactionRepository.findById(_id, (error, result) => {
-            if (error)
-                callback(error, result);
-            else {
-                let body = req.body;
-                let currentItem = result;
-                let item = <ITransaction>body['basic'];
-
-                if (!item['inventoryItemCode']) {
-                    delete item['inventoryItemCode'];
-                }
-                item['inventoryItemCode'] = currentItem['inventoryItemCode'];
-
-                if (!item['inventoryItemName'] || !item['inventoryItemCostPrice'] || !item['inventoryItemBaseUnit']) {
-                    callback('error', null);
-                    return;
-                }
-
-                let userId = req['payload']['_id'];
-                item['createdBy'] = userId;
-
-                let inventoryItemCategoryId = body['basic']['inventoryItemCategory.inventoryItemCategoryId'];
-                item['inventoryItemCategory'] = inventoryItemCategoryId;
-                delete item['inventoryItemCategory.inventoryItemCategoryId'];
-
-                let inventoryItemConversionUnit = body['unitConversion'];
-                item['inventoryItemConversionUnit'] = JSON.stringify(inventoryItemConversionUnit);
-
-                let specification = body['specification'];
-                for (let i = 0; i < 5; i++) {
-                    let spec = specification[i];
-                    if (spec) {
-                        item['inventoryItemSpecification' + (i + 1)] = spec;
-                    } else {
-                        item['inventoryItemSpecification' + (i + 1)] = null;
-                    }
-                }
-
-                this._transactionRepository.update(currentItem._id, item, callback);
-            }
-
-        });
-    }
-
-    delete(_id: string, callback: (error: any, result: any) => void) {
-        this._transactionRepository.delete(_id, callback);
-    }
-
-    retrieve(callback: (error: any, result: any) => void, options?: any) {
-        let _options = options || {};
-
-        this._transactionRepository.retrieve(callback, _options);
-    }
-
-    query(callback: (error: any, result: any) => void, options?: any) {
-        let _options = options || {};
-
-        this._transactionRepository.find(callback, _options);
-    }
-
-    findById(_id: string, callback: (error: any, result: ITransaction) => void) {
-        this._transactionRepository.findById(_id, callback);
-    }
-
-    // search(_keyword: string, callback: (error: any, result: any) => void) {
-    //     if (!!_keyword) {
-    //         let _options = {};
-    //         _options['cond'] = {};
-    //         _options['cond']['filter'] = {
-    //             $or: [
-    //                 { 'inventoryItemCode': new RegExp(_keyword, 'i') },
-    //                 { 'inventoryItemName': new RegExp(_keyword, 'i') }
-    //             ]
-    //         };
-    //         _options['cond']['type'] = 'search';
-    //
-    //         this._transactionRepository.find(callback, _options);
-    //     } else {
-    //         this._transactionRepository.retrieve(callback, {});
-    //     }
-    // }
-
-    findCode(_code: string, callback: (error: any, result: any) => void) {
-        let _options = {};
-        _options['cond'] = {};
-        _options['cond']['filter'] = { 'inventoryItemCode': _code };
-        _options['cond']['type'] = '=';
-
-        this._transactionRepository.find(callback, _options);
-    }
-
-    meta(callback: (error: any, result: any) => void, options?: any) {
-        let _options = options || {};
-
-        this._transactionRepository.meta(callback, _options);
     }
 }
 

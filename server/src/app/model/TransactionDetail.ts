@@ -15,6 +15,10 @@ class TransactionDetail {
         return this._transactiondetail.transaction;
     }
 
+    get transactionType(): number {
+        return this._transactiondetail.transactionType;
+    }
+
     get inventoryItem(): any {
         return this._transactiondetail.inventoryItem;
     }
@@ -23,8 +27,8 @@ class TransactionDetail {
         return this._transactiondetail.stock;
     }
 
-    get sencondStock(): any {
-        return this._transactiondetail.sencondStock;
+    get secondStock(): any {
+        return this._transactiondetail.secondStock;
     }
 
     get unit(): string {
@@ -53,6 +57,10 @@ class TransactionDetail {
 
     get realQuantity(): number {
         return this._transactiondetail.realQuantity;
+    }
+
+    get lotNo(): string {
+        return this._transactiondetail.lotNo;
     }
 
     get createdBy(): any {

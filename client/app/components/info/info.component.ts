@@ -82,7 +82,7 @@ export class InfoComponent implements OnInit {
                         'inputWidth': elm.systemConfigInputWidth || 9
                     });
                     this.valueDictionary[elm.systemConfigFieldName] = elm.systemConfigValue;
-                })
+                });
                 this.context = {
                     'inputs': this.inputs,
                     'valueDictionary': this.valueDictionary,

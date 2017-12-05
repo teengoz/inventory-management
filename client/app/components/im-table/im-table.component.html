@@ -64,7 +64,7 @@
             <div class="value-text">
               <span class="glyphicon glyphicon-pencil action-icon" aria-hidden="true" (click)="edit(item); $event.stopPropagation();"></span>
               <span class="glyphicon glyphicon-duplicate action-icon" aria-hidden="true" (click)="clone(item); $event.stopPropagation()"></span>
-              <span class="glyphicon glyphicon-trash action-icon" aria-hidden="true" (click)="delete(item); $event.stopPropagation();"></span>
+              <span class="glyphicon glyphicon-trash action-icon" aria-hidden="true" (click)="callDelete(item); $event.stopPropagation();"></span>
             </div>
           </td>
         </tr>

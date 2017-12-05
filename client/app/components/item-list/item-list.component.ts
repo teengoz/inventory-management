@@ -46,15 +46,16 @@ export class ItemListComponent implements OnInit {
             filter: true
         },
         {
-            title: 'Giá nhập',
-            propName: 'inventoryItemCostPrice',
+            title: 'Tồn kho',
+            propName: 'total',
             width: 2,
             sort: true,
-            filter: true
+            filter: false
         }
     ];
 
     data: any[];
+    itemQuantityList: any[];
     checkedBoxs = 0;
     isCheckedAll = false;
     searchTerms = {};
@@ -97,7 +98,9 @@ export class ItemListComponent implements OnInit {
         } else {
             let _param = (this.isDefaultParam(parameters)) ? this.paramObject : parameters;
             return this.service.query(_param, _page, limit).then(
-                result => this.changeData(result),
+                result => {
+                    this.changeData(result);
+                },
                 error => console.log(error)
             );
         }
@@ -105,6 +108,18 @@ export class ItemListComponent implements OnInit {
 
     private changeData(result) {
         this.data = result.data;
+        this.itemQuantityList = [];
+
+        for (let i = 0; i < this.data.length; i++) {
+            let currentItem = this.data[i];
+            this.service.getQuantity(currentItem['inventoryItemId']).then(
+                itemQuantityResponse => {
+                    this.itemQuantityList[currentItem['inventoryItemId']] = +itemQuantityResponse.data[0]['total'] | 0;
+                },
+                error => console.log(error)
+            );
+        }
+
         this.paginationData['total'] = +result.meta.total;
         this.paginationData['totalPage'] = +result.meta.total_page;      
         
@@ -133,27 +148,51 @@ export class ItemListComponent implements OnInit {
         let current = item;
 
         try {
-            for (let i = 0; i < props.length; i++) {
-                if (current == undefined || current == 'undefined') {
-                    return '';
-                }
-                else if (current[props[i]] == undefined || current[props[i]] == 'undefined') {
-                    return '';
-                }
-                else {
-                    current = current[props[i]];
-                    if (first && Object.prototype.toString.call(current) === '[object Array]') {
-                        current = current[0];
+            if (path == "total") {
+                return (this.itemQuantityList[item['_id']]) ? (this.itemQuantityList[item['_id']]) : 0;
+            } else {
+                for (let i = 0; i < props.length; i++) {
+                    if (current == undefined || current == 'undefined') {
+                        return '';
+                    }
+                    else if (current[props[i]] == undefined || current[props[i]] == 'undefined') {
+                        return '';
+                    }
+                    else {
+                        current = current[props[i]];
+                        if (first && Object.prototype.toString.call(current) === '[object Array]') {
+                            current = current[0];
+                        }
                     }
                 }
             }
         }
         catch (e) {
-            //console.log(e);
             return 'Lỗi truy xuất';
         }
 
         return current;
+    }
+
+    callDelete(object) {
+        let dialog = this.modal.confirm()
+            .title('Xác nhận xóa')
+            .okBtn('Đồng ý')
+            .cancelBtn('Hủy')
+            .showClose(true)
+            .size('sm')
+            .body('Bạn có đồng ý xóa Đối tượng đã chọn')
+            .open();
+        
+        event.stopPropagation();
+
+        dialog.then(resultPromise => {
+            return resultPromise.result
+                .then(result => {
+                    this.delete(object);
+                }, () => console.log('Rejected')
+                );
+        });
     }
 
     // -------------------------------------
@@ -235,6 +274,8 @@ export class ItemListComponent implements OnInit {
                 case 'delete':
                     let dialog = this.modal.confirm()
                         .title('Xác nhận xóa')
+                        .okBtn('Đồng ý')
+                        .cancelBtn('Hủy')
                         .showClose(true)
                         .size('sm')
                         .body('Bạn có đồng ý xóa các đối tượng đã chọn')

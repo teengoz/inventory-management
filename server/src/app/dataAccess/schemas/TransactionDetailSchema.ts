@@ -16,6 +16,10 @@ class TransactionDetailSchema {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'transactions'
             },
+            transactionType: {
+                type: Number,
+                required: true
+            },
             inventoryItem: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'inventory_items'
@@ -53,6 +57,9 @@ class TransactionDetailSchema {
             realQuantity: {
                 type: Number,
                 required: true
+            },
+            lotNo: {
+                type: String
             },
             createdBy: {
                 type: mongoose.Schema.Types.ObjectId,

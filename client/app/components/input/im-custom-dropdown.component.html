@@ -13,6 +13,9 @@
   <div #dropdownContainer class="options-container row" [ngClass]="{ 'hide-options': isHideOptions }">
     <div *ngFor="let option of optionsArray" class="dropdown-option" [ngClass]="{ 'hovered-selection': (option.value == selected) }" (click)="clickOption(option.value)">
       {{ option.label }}
+      <div class="instock">
+        Tồn: {{ option.instock }} {{ option.inventoryItemBaseUnit }}
+      </div>
     </div>
   </div>
 </div>
